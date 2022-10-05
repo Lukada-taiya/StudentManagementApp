@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@loginpage.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@loginpage.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lutadam.studentmanagementapp.MainController">
    <children>
       <AnchorPane>
          <children>
-            <AnchorPane prefHeight="400.0" prefWidth="270.0" styleClass="left-form" stylesheets="@loginpage.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="apMainForm" prefHeight="400.0" prefWidth="270.0" styleClass="left-form" stylesheets="@loginpage.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
                <children>
                   <FontAwesomeIconView fill="WHITE" glyphName="GRADUATION_CAP" layoutX="85.0" layoutY="161.0" size="130" />
                   <Label layoutX="58.0" layoutY="190.0" text="STUDENT MANAGEMENT" textFill="WHITE">
@@ -30,24 +30,24 @@
                </children></AnchorPane>
             <AnchorPane prefHeight="400.0" prefWidth="330.0" stylesheets="@loginpage.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <FontAwesomeIconView fill="#a49f9f" glyphName="USER" layoutX="114.0" layoutY="108.0" size="100" />
-                  <Label layoutX="82.0" layoutY="131.0" text="Welcome back!" textFill="#ee4856">
+                  <FontAwesomeIconView fill="#5e5757" glyphName="USER" layoutX="115.0" layoutY="116.0" size="100" />
+                  <Label layoutX="78.0" layoutY="132.0" text="Welcome back!" textFill="#5e5757">
                      <font>
                         <Font name="Arial Bold" size="20.0" />
                      </font>
                   </Label>
-                  <TextField layoutX="38.0" layoutY="184.0" prefHeight="33.0" prefWidth="225.0" promptText="Username" styleClass="textfield" />
-                  <PasswordField layoutX="38.0" layoutY="229.0" prefHeight="33.0" prefWidth="225.0" promptText="Password" styleClass="textfield">
+                  <TextField fx:id="tfUsername" layoutX="38.0" layoutY="184.0" prefHeight="33.0" prefWidth="225.0" promptText="Username" styleClass="textfield" />
+                  <PasswordField fx:id="tfPassword" layoutX="38.0" layoutY="229.0" prefHeight="33.0" prefWidth="225.0" promptText="Password" styleClass="textfield">
                      <font>
                         <Font name="Arial" size="13.0" />
                      </font>
                   </PasswordField>
-                  <Button layoutX="38.0" layoutY="280.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="225.0" styleClass="login-button" text="Log In">
+                  <Button fx:id="btnLogin" layoutX="38.0" layoutY="280.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="225.0" styleClass="login-button" text="Log In">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button layoutX="224.0" layoutY="10.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="42.0" styleClass="close" stylesheets="@loginpage.css" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                  <Button fx:id="btnClose" layoutX="224.0" layoutY="10.0" mnemonicParsing="false" onAction="#close" prefHeight="20.0" prefWidth="42.0" styleClass="close" stylesheets="@loginpage.css" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
                      <graphic>
                         <FontAwesomeIconView glyphName="CLOSE" size="20" />
                      </graphic>
