@@ -32,12 +32,12 @@
                      <children>
                         <AnchorPane prefHeight="34.0" prefWidth="1100.0" styleClass="title-bar">
                            <children>
-                              <Button fx:id="close" layoutX="1047.0" layoutY="5.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="42.0" styleClass="close" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                              <Button fx:id="close" layoutX="1047.0" layoutY="5.0" mnemonicParsing="false" onAction="#close" prefHeight="20.0" prefWidth="42.0" styleClass="close" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
                                  <graphic>
                                     <FontAwesomeIconView glyphName="CLOSE" size="20" wrappingWidth="19.214285850524902" />
                                  </graphic>
                               </Button>
-                              <Button fx:id="minimize" layoutX="1005.0" layoutY="5.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="42.0" styleClass="minimize" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="2.0">
+                              <Button fx:id="minimize" layoutX="1005.0" layoutY="5.0" mnemonicParsing="false" onAction="#minimize" prefHeight="20.0" prefWidth="42.0" styleClass="minimize" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="2.0">
                                  <graphic>
                                     <FontAwesomeIconView glyphName="WINDOW_MINIMIZE" size="18" wrappingWidth="19.214285850524902" />
                                  </graphic>
@@ -69,7 +69,7 @@
                               <Font size="19.0" />
                            </font>
                         </Label>
-                        <Button fx:id="btnHome" layoutX="14.0" layoutY="245.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Home" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnHome" layoutX="14.0" layoutY="245.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Home" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -78,7 +78,7 @@
                            </graphic>
                         </Button>
                         <Line endX="117.0" layoutX="121.0" layoutY="205.0" startX="-109.0" stroke="WHITE" />
-                        <Button fx:id="btnAddStudents" layoutX="17.0" layoutY="280.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Add Students" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnAddStudents" layoutX="17.0" layoutY="280.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Add Students" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -86,7 +86,7 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="PLUS_CIRCLE" size="20" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnAvailableCourses" layoutX="19.0" layoutY="318.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Available Courses" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnAvailableCourses" layoutX="19.0" layoutY="318.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Available Courses" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -94,7 +94,7 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="BOOK" size="20" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnAddStudentsGrades" layoutX="19.0" layoutY="360.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Students' Grades" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnAddStudentsGrades" layoutX="19.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Students' Grades" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -102,7 +102,7 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="CLIPBOARD" size="20" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnLogOut" layoutX="12.0" layoutY="511.0" mnemonicParsing="false" styleClass="logout-button" text="Log Out" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnLogOut" layoutX="12.0" layoutY="511.0" mnemonicParsing="false" onAction="#logOut" styleClass="logout-button" text="Log Out" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
                            <graphic>
                               <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" size="25" />
                            </graphic>
@@ -116,7 +116,7 @@
                <center>
                   <AnchorPane fx:id="main_page" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_page" prefHeight="558.0" prefWidth="855.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                        <AnchorPane fx:id="home_page" prefHeight="558.0" prefWidth="855.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                            <styleClass>
                               <String fx:value="shadow" />
                               <String fx:value="card-container" />
@@ -213,9 +213,9 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0" visible="false">
+                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0">
                            <children>
-                              <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="534.0" prefWidth="831.0">
+                              <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="539.0" prefWidth="831.0">
                                  <styleClass>
                                     <String fx:value="shadow" />
                                     <String fx:value="card-container" />
@@ -301,7 +301,7 @@
                                     <Button fx:id="addStudents_btnClear" layoutX="480.0" layoutY="494.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="82.0" styleClass="clear-btn" text="Clear" />
                                  </children>
                               </AnchorPane>
-                              <AnchorPane layoutX="11.0" layoutY="14.0" prefHeight="258.0" prefWidth="831.0">
+                              <AnchorPane layoutX="11.0" layoutY="7.0" prefHeight="258.0" prefWidth="831.0">
                                  <styleClass>
                                     <String fx:value="shadow" />
                                     <String fx:value="card-container" />
@@ -329,7 +329,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="availableGrade_page" layoutX="248.0" layoutY="79.0" prefHeight="558.0" prefWidth="854.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="availableCourse_page" layoutX="248.0" layoutY="79.0" prefHeight="558.0" prefWidth="854.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="10.0" prefHeight="538.0" prefWidth="294.0">
                                  <styleClass>
@@ -342,23 +342,23 @@
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="availableGrade_tfCourse" layoutX="100.0" layoutY="43.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
+                                    <TextField fx:id="availableCourse_tfCourse" layoutX="100.0" layoutY="43.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
                                     <Label layoutX="4.0" layoutY="104.0" text="Description:">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <TextArea fx:id="availableGrade_taDescription" layoutX="100.0" layoutY="95.0" prefHeight="148.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
+                                    <TextArea fx:id="availableCourse_taDescription" layoutX="100.0" layoutY="95.0" prefHeight="148.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
                                     <Label layoutX="23.0" layoutY="275.0" text="Degree:">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="availableGrade_taDegree" layoutX="100.0" layoutY="266.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
-                                    <Button fx:id="availableGrade_btnAdd" layoutX="35.0" layoutY="349.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="add-btn" text="Add" />
-                                    <Button fx:id="availableGrade_btnUpdate" layoutX="157.0" layoutY="349.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="update-btn" text="Update" />
-                                    <Button fx:id="availableGrade_btnDelete" layoutX="157.0" layoutY="396.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="delete-btn" text="Delete" />
-                                    <Button fx:id="availableGrade_btnClear" layoutX="35.0" layoutY="396.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" />
+                                    <TextField fx:id="availableCourse_taDegree" layoutX="100.0" layoutY="266.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
+                                    <Button fx:id="availableCourse_btnAdd" layoutX="35.0" layoutY="349.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="add-btn" text="Add" />
+                                    <Button fx:id="availableCourse_btnUpdate" layoutX="157.0" layoutY="349.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="update-btn" text="Update" />
+                                    <Button fx:id="availableCourse_btnDelete" layoutX="157.0" layoutY="396.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="delete-btn" text="Delete" />
+                                    <Button fx:id="availableCourse_btnClear" layoutX="35.0" layoutY="396.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="331.0" layoutY="11.0" prefHeight="538.0" prefWidth="510.0">
@@ -367,11 +367,11 @@
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="availableGrade_table" layoutX="5.0" layoutY="6.0" prefHeight="528.0" prefWidth="498.0">
+                                    <TableView fx:id="availableCourse_table" layoutX="5.0" layoutY="6.0" prefHeight="528.0" prefWidth="498.0">
                                       <columns>
                                         <TableColumn fx:id="availableGrade_colCourse" prefWidth="92.0" text="COURSE" />
-                                        <TableColumn fx:id="availableGrade_colCouse" prefWidth="241.0" text="DESCRIPTION" />
-                                          <TableColumn fx:id="availableGrade_colDegree" prefWidth="164.0" text="DEGREE" />
+                                        <TableColumn fx:id="availableCourse_colCouse" prefWidth="241.0" text="DESCRIPTION" />
+                                          <TableColumn fx:id="availableCourse_colDegree" prefWidth="164.0" text="DEGREE" />
                                       </columns>
                                     </TableView>
                                  </children>

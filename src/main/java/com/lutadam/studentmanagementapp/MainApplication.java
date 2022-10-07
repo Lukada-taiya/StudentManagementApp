@@ -26,7 +26,7 @@ public class MainApplication extends Application {
         root.setOnMouseDragged((MouseEvent event) -> {
             stage.setX(event.getScreenX() - x);
             stage.setY(event.getScreenY() - y);
-            stage.setOpacity(.7);
+            stage.setOpacity(.5);
         });
 
         root.setOnMouseReleased((MouseEvent event) -> {

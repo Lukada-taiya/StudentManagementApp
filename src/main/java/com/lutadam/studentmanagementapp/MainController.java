@@ -10,8 +10,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -33,6 +35,8 @@ public class MainController {
 
     @FXML
     private TextField tfUsername;
+    private double x;
+    private double y;
 
     @FXML
     public void close() {
@@ -40,7 +44,7 @@ public class MainController {
     }
 
     @FXML
-    public void btnLoginAction(ActionEvent event) {
+    public void btnLoginAction() {
         Alert alert;
         String name = tfUsername.getText().trim();
         String password = tfPassword.getText().trim();
@@ -64,14 +68,31 @@ public class MainController {
                     alert.showAndWait();
                     //Show Dashboard
                     Parent root = null;
+                    Stage stage = new Stage();
                     try {
                         root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
                     }catch (IOException e) { e.printStackTrace();}
                     Scene scene = new Scene(root, 1100,600);
-                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    root.setOnMousePressed((MouseEvent e) -> {
+                        x = e.getSceneX();
+                        y = e.getSceneY();
+                    });
+
+                    root.setOnMouseDragged((MouseEvent e) -> {
+                        stage.setX(e.getScreenX() - x);
+                        stage.setY(e.getScreenY() - y);
+                        stage.setOpacity(.5);
+                    });
+
+                    root.setOnMouseReleased((MouseEvent e) -> {
+                        stage.setOpacity(1);
+                    });
+//                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
                     stage.setTitle("Student Management App - Dashboard");
                     stage.setScene(scene);
-                    stage.centerOnScreen();
+//                    stage.centerOnScreen();
+                    apMainForm.getScene().getWindow().hide();
                     stage.show();
                 }else {
                     alert = new Alert(Alert.AlertType.ERROR);
