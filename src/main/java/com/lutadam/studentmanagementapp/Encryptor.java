@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Encryptor {
 
-    private static String encrypt(String pass) {
+    public static String encrypt(String pass) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("MD5");

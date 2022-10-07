@@ -3,11 +3,13 @@ package com.lutadam.studentmanagementapp;
 import java.sql.*;
 
 public class DBUtils {
+    private static Connection connection = null;
+    private static PreparedStatement fetch = null;
+    private static ResultSet fetchedData = null;
 
-    private static Connection connectDb() {
-        Connection connection = null;
+    public static Connection connectDb() {
         try {
-            connection = DriverManager.getConnection("jdbc:mysql:localhost:3306/studentmanagementapp",
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/studentmanagementapp",
                     "root", "");
         }catch (SQLException e) {
             e.printStackTrace();
@@ -15,21 +17,39 @@ public class DBUtils {
         return connection;
     }
 
-    private static void closeResource(Connection opt) {
+    public static void closeAllResources() {
+        if(fetchedData != null) {
+            try {
+                fetchedData.close();
+            }catch (SQLException e) { e.printStackTrace();}
+        }
+        if(fetch != null) {
+            try {
+                fetch.close();
+            }catch (SQLException e) { e.printStackTrace();}
+        }
+        if(connection != null) {
+            try {
+                connection.close();
+            }catch (SQLException e) { e.printStackTrace();}
+        }
+    }
+
+    public static void closeResource(Connection opt) {
         if(opt != null) {
             try {
                 opt.close();
             }catch (SQLException e) { e.printStackTrace();}
         }
     }
-    private static void closeResource(PreparedStatement opt) {
+    public static void closeResource(PreparedStatement opt) {
         if(opt != null) {
             try {
                 opt.close();
             }catch (SQLException e) { e.printStackTrace();}
         }
     }
-    private static void closeResource(ResultSet opt) {
+    public static void closeResource(ResultSet opt) {
         if(opt != null) {
             try {
                 opt.close();
@@ -38,10 +58,8 @@ public class DBUtils {
     }
 
 
-    private static ResultSet fetchDb(String query, String... opts) {
-        Connection connection = connectDb();
-        ResultSet fetchedData = null;
-        PreparedStatement fetch = null;
+    public static ResultSet fetchDb(String query, String... opts) {
+        connection = connectDb();
 
         try{
             fetch = connection.prepareStatement(query);
@@ -53,18 +71,12 @@ public class DBUtils {
             fetchedData = fetch.executeQuery();
         }catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            closeResource(fetchedData);
-            closeResource(fetch);
-            closeResource(connection);
         }
         return fetchedData;
     }
 
-    private static void insertDb(String query, String... opts) {
+    public static void insertDb(String query, String... opts) {
         Connection connection = connectDb();
-        PreparedStatement fetch = null;
-
         try{
             fetch = connection.prepareStatement(query);
             int count = 1;
