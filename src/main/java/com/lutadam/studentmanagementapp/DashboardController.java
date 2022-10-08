@@ -1,5 +1,6 @@
 package com.lutadam.studentmanagementapp;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,8 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +20,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DashboardController {
@@ -43,37 +50,37 @@ public class DashboardController {
     private ComboBox<?> addStudents_cbCourse;
 
     @FXML
-    private ComboBox<?> addStudents_cbGender;
+    private ComboBox<String> addStudents_cbGender;
 
     @FXML
-    private ComboBox<?> addStudents_cbStatus;
+    private ComboBox<String> addStudents_cbStatus;
 
     @FXML
-    private ComboBox<?> addStudents_cbYear;
+    private ComboBox<String> addStudents_cbYear;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colBirthDate;
+    private TableColumn<Student, String> addStudents_colBirthDate;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colCourse;
+    private TableColumn<Student, String> addStudents_colCourse;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colFName;
+    private TableColumn<Student, String> addStudents_colFName;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colGender;
+    private TableColumn<Student, String> addStudents_colGender;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colId;
+    private TableColumn<Student, String> addStudents_colId;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colLName;
+    private TableColumn<Student, String> addStudents_colLName;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colStatus;
+    private TableColumn<Student, String> addStudents_colStatus;
 
     @FXML
-    private TableColumn<?, ?> addStudents_colYear;
+    private TableColumn<Student, String> addStudents_colYear;
 
     @FXML
     private DatePicker addStudents_dtBirthDate;
@@ -82,7 +89,7 @@ public class DashboardController {
     private ImageView addStudents_image;
 
     @FXML
-    private TableView<?> addStudents_table;
+    private TableView<Student> addStudents_table;
 
     @FXML
     private TextField addStudents_tfFName;
@@ -111,20 +118,24 @@ public class DashboardController {
     @FXML
     private Button availableCourse_btnUpdate;
 
-    @FXML
-    private TableColumn<?, ?> availableCourse_colCouse;
 
     @FXML
-    private TableColumn<?, ?> availableCourse_colDegree;
+    private TableColumn<Course,String> availableCourse_colDescription;
 
     @FXML
-    private TextField availableCourse_taDegree;
+    private TableColumn<Course,String> availableCourse_colCourse;
+
+    @FXML
+    private TableColumn<Course,String> availableCourse_colDegree;
+
+    @FXML
+    private TextField availableCourse_tfDegree;
 
     @FXML
     private TextArea availableCourse_taDescription;
 
     @FXML
-    private TableView<?> availableCourse_table;
+    private TableView<Course> availableCourse_table;
 
     @FXML
     private TextField availableCourse_tfCourse;
@@ -185,7 +196,7 @@ public class DashboardController {
     private Button studentGrade_btnUpdate;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_course;
+    private TableColumn<Student, String> studentGrade_col_course;
 
     @FXML
     private TableColumn<?, ?> studentGrade_col_firstSem;
@@ -227,16 +238,256 @@ public class DashboardController {
     private Label studentGrade_tfYear;
 
 
+    private ResultSet result;
+    private ObservableList<Course> courseList;
     private double x;
     private double y;
+    private Image image;
+    private int[] yearList = {100,200,300,400,500,600};
+    private String[] genderList = {"Male", "Female"};
+    private String[] statusList = {"Enrolled", "Not Enrolled", "Inactive"};
 
     public void initialize() {
         btnHome.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+        showStudentData();
+        populateGenderList();
+        populateStatusList();
+        populateYearList();
+        showCourseData();
     }
 
-    public ObservableList<Student> getStudentData() {
+    @FXML
+    private void deleteCourse() {
+        Course course = availableCourse_table.getSelectionModel().getSelectedItem();
+        if(course != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to delete " + course.getName());
+            Optional<ButtonType> response = alert.showAndWait();
+
+            if(response.isPresent() && response.get().equals(ButtonType.OK)) {
+                String query = "DELETE FROM course WHERE name = ?";
+                DBUtils.insertDb(query, course.getName());
+                courseList.remove(course);
+                clearCourseForm();
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Course Deleted");
+                alert.setHeaderText(null);
+                alert.setContentText("Course has been deleted successfully");
+                alert.show();
+            }
+        }
+    }
+
+    private void updateCourseTable(Course course) {
+        for(Course obj:courseList) {
+            if(obj.getName().equals(course.getName())) {
+                obj.setDegree(course.getDegree());
+                obj.setDescription(course.getDescription());
+            }
+        }
+    }
+
+    @FXML
+    private void clearCourseForm() {
+        availableCourse_tfCourse.clear();
+        availableCourse_taDescription.clear();
+        availableCourse_tfDegree.clear();
+        availableCourse_table.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void updateCourse() {
+        String name = availableCourse_tfCourse.getText();
+        String description = availableCourse_taDescription.getText();
+        String degree = availableCourse_tfDegree.getText();
+        Alert alert;
+        if(name.isEmpty() || description.isEmpty() || degree.isEmpty()) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Update Course Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.show();
+        }else {
+            String query = "SELECT * FROM course WHERE name = ?";
+            result = DBUtils.fetchDb(query, name);
+            try {
+                if(!result.isBeforeFirst()) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Update Course Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("This course does not exist");
+                    alert.show();
+                }else {
+                    String updateQuery = "UPDATE course SET description = ?,degree = ? WHERE name = ?";
+                    DBUtils.insertDb(updateQuery, description, degree, name);
+                    clearCourseForm();
+                    updateCourseTable(new Course(name, description, degree));
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Course Updated");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Course has been updated successfully");
+                    alert.show();
+                }
+            }catch (SQLException e) { e.printStackTrace(); }
+            DBUtils.closeAllResources();
+        }
+    }
+
+
+    @FXML
+    private void addCourse() {
+        String name = availableCourse_tfCourse.getText().trim();
+        String description = availableCourse_taDescription.getText().trim();
+        String degree = availableCourse_tfDegree.getText().trim();
+        Alert alert;
+        if(name.isEmpty() || description.isEmpty() || degree.isEmpty()) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Add New Course Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.show();
+        }else {
+            String query = "SELECT * FROM course WHERE name = ?";
+            result = DBUtils.fetchDb(query, name);
+            try {
+                if(result.isBeforeFirst()) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Add New Course Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Course already exists");
+                    alert.show();
+                }else {
+                    query = "INSERT INTO course(name,description,degree) VALUES(?,?,?)";
+                    DBUtils.insertDb(query,name,description,degree);
+                    clearCourseForm();
+                    courseList.add(new Course(name, description, degree));
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Course Added");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Course has been successfully added");
+                    alert.show();
+                }
+            }catch (SQLException e) {e.printStackTrace();}
+            DBUtils.closeAllResources();
+        }
+
+    }
+
+    private ObservableList<Course> getCourseData() {
+        courseList = FXCollections.observableArrayList();
+        String query = "SELECT * FROM course";
+        result = DBUtils.fetchDb(query);
+        try {
+            if(result.isBeforeFirst()) {
+                while (result.next()) {
+                    String name = result.getString("name");
+                    String description = result.getString("description");
+                    String degree = result.getString("degree");
+                    Course course = new Course(name,description,degree);
+                    courseList.add(course);
+                }
+            }
+        }catch (SQLException e) {e.printStackTrace();}
+        return  courseList;
+    }
+
+    @FXML
+    private void showCourseData() {
+        courseList = getCourseData();
+        if(courseList.isEmpty()) return;
+        availableCourse_colCourse.setCellValueFactory(new PropertyValueFactory<>("name"));
+        availableCourse_colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        availableCourse_colDegree.setCellValueFactory(new PropertyValueFactory<>("degree"));
+        availableCourse_table.setItems(courseList);
+    }
+
+    @FXML
+    private void showCourseDataInForm() {
+        Course course = availableCourse_table.getSelectionModel().getSelectedItem();
+        if(course != null) {
+            availableCourse_tfCourse.setText(course.getName());
+            availableCourse_tfDegree.setText(course.getDegree());
+            availableCourse_taDescription.setText(course.getDescription());
+        }
+    }
+
+    private ObservableList<Student> getStudentData() {
+        ObservableList<Student> studentList = FXCollections.observableArrayList();
         String query = "SELECT * FROM student";
-        DBUtils.fetchDb(query);
+        result = DBUtils.fetchDb(query);
+        try {
+            if(result.isBeforeFirst()) {
+                while (result.next()) {
+                    Student student = new Student(result.getInt("id_number"), result.getInt("year"),
+                            result.getString("course"), result.getString("firstName"),
+                            result.getString("lastName"), result.getString("gender"), result.getDate("birthdate"),
+                            result.getString("status"), result.getString("image"));
+                    studentList.add(student);
+                }
+            }
+        }catch (SQLException e) { e.printStackTrace(); }
+        DBUtils.closeAllResources();
+        return studentList;
+    }
+
+    @FXML
+    private void showStudentData() {
+        ObservableList<Student> studentD = getStudentData();
+        if(studentD.isEmpty()) return;
+        addStudents_colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        addStudents_colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
+        addStudents_colCourse.setCellValueFactory(new PropertyValueFactory<>("course"));
+        addStudents_colFName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        addStudents_colLName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        addStudents_colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        addStudents_colBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+        addStudents_colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        addStudents_table.setItems(studentD);
+    }
+
+    //Shows student data in form to be edited on add students page
+    @FXML
+    private void showStudentDataInForm() {
+        Student stu = addStudents_table.getSelectionModel().getSelectedItem();
+        if(stu != null) {
+            addStudents_tfId.setText(String.valueOf(stu.getId()));
+            addStudents_tfFName.setText(stu.getFirstName());
+            addStudents_tfLName.setText(stu.getLastName());
+            String uri = "file:/home/lukada/Documents/workspace/StudentManagementApp/src/main/resources/com/lutadam/studentmanagementapp/images/"
+                    + stu.getImage();
+            image = new Image(uri, 164,200, false, true);
+            addStudents_image.setImage(image);
+        }
+    }
+
+    private void populateYearList() {
+
+        List<String> list = new ArrayList<>();
+        for(int year: yearList) {
+            list.add(String.valueOf(year));
+        }
+        ObservableList<String> obList = FXCollections.observableArrayList(list);
+        addStudents_cbYear.setItems(obList);
+    }
+
+    private void populateStatusList() {
+        List<String> list = new ArrayList<>();
+        for(String status: statusList) {
+            list.add(String.valueOf(status));
+        }
+        ObservableList<String> obList = FXCollections.observableArrayList(list);
+        addStudents_cbStatus.setItems(obList);
+    }
+
+    private void populateGenderList() {
+        List<String> list = new ArrayList<>();
+        for(String gender: genderList) {
+            list.add(String.valueOf(gender));
+        }
+        ObservableList<String> obList = FXCollections.observableArrayList(list);
+        addStudents_cbGender.setItems(obList);
     }
 
     @FXML

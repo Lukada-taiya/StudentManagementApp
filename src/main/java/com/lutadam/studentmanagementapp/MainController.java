@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -89,7 +89,7 @@ public class MainController {
                     });
 //                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-                    stage.setTitle("Student Management App - Dashboard");
+                    stage.initStyle(StageStyle.TRANSPARENT);
                     stage.setScene(scene);
 //                    stage.centerOnScreen();
                     apMainForm.getScene().getWindow().hide();

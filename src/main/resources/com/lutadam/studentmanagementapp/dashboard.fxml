@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -78,7 +79,7 @@
                            </graphic>
                         </Button>
                         <Line endX="117.0" layoutX="121.0" layoutY="205.0" startX="-109.0" stroke="WHITE" />
-                        <Button fx:id="btnAddStudents" layoutX="17.0" layoutY="280.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Add Students" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnAddStudents" layoutX="17.0" layoutY="280.0" mnemonicParsing="false" onAction="#showStudentData" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Add Students" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -86,7 +87,7 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="PLUS_CIRCLE" size="20" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnAvailableCourses" layoutX="19.0" layoutY="318.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Available Courses" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnAvailableCourses" layoutX="19.0" layoutY="318.0" mnemonicParsing="false" onAction="#showCourseData" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Available Courses" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -213,7 +214,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0">
+                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0" visible="false">
                            <children>
                               <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="539.0" prefWidth="831.0">
                                  <styleClass>
@@ -287,7 +288,11 @@
                                           <String fx:value="card-container" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addStudents_image" fitHeight="200.0" fitWidth="164.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <ImageView fx:id="addStudents_image" fitHeight="200.0" fitWidth="164.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <image>
+                                                <Image url="file:/home/lukada/Documents/workspace/StudentManagementApp/src/main/resources/com/lutadam/studentmanagementapp/images/images.jpeg" />
+                                             </image>
+                                          </ImageView>
                                           <Button fx:id="addStudents_btnInsert" layoutY="148.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="164.0" styleClass="insert-btn" text="Insert">
                                              <font>
                                                 <Font size="16.0" />
@@ -313,7 +318,7 @@
                                        </font>
                                     </TextField>
                                     <FontAwesomeIconView glyphName="SEARCH" layoutX="245.0" layoutY="36.0" size="17" />
-                                    <TableView fx:id="addStudents_table" layoutX="11.0" layoutY="68.0" prefHeight="179.0" prefWidth="809.0">
+                                    <TableView fx:id="addStudents_table" layoutX="11.0" layoutY="68.0" onMouseClicked="#showStudentDataInForm" prefHeight="179.0" prefWidth="809.0">
                                       <columns>
                                         <TableColumn fx:id="addStudents_colId" prefWidth="75.0" text="ID" />
                                         <TableColumn fx:id="addStudents_colYear" prefWidth="75.0" text="YEAR" />
@@ -329,7 +334,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="availableCourse_page" layoutX="248.0" layoutY="79.0" prefHeight="558.0" prefWidth="854.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="availableCourse_page" layoutX="248.0" layoutY="79.0" prefHeight="558.0" prefWidth="854.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="10.0" prefHeight="538.0" prefWidth="294.0">
                                  <styleClass>
@@ -348,17 +353,17 @@
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <TextArea fx:id="availableCourse_taDescription" layoutX="100.0" layoutY="95.0" prefHeight="148.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
+                                    <TextArea fx:id="availableCourse_taDescription" layoutX="100.0" layoutY="95.0" prefHeight="148.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" wrapText="true" />
                                     <Label layoutX="23.0" layoutY="275.0" text="Degree:">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="availableCourse_taDegree" layoutX="100.0" layoutY="266.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
-                                    <Button fx:id="availableCourse_btnAdd" layoutX="35.0" layoutY="349.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="add-btn" text="Add" />
-                                    <Button fx:id="availableCourse_btnUpdate" layoutX="157.0" layoutY="349.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="update-btn" text="Update" />
-                                    <Button fx:id="availableCourse_btnDelete" layoutX="157.0" layoutY="396.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="delete-btn" text="Delete" />
-                                    <Button fx:id="availableCourse_btnClear" layoutX="35.0" layoutY="396.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" />
+                                    <TextField fx:id="availableCourse_tfDegree" layoutX="100.0" layoutY="266.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" />
+                                    <Button fx:id="availableCourse_btnAdd" layoutX="35.0" layoutY="349.0" mnemonicParsing="false" onAction="#addCourse" prefHeight="36.0" prefWidth="103.0" styleClass="add-btn" text="Add" />
+                                    <Button fx:id="availableCourse_btnUpdate" layoutX="157.0" layoutY="349.0" mnemonicParsing="false" onAction="#updateCourse" prefHeight="36.0" prefWidth="103.0" styleClass="update-btn" text="Update" />
+                                    <Button fx:id="availableCourse_btnDelete" layoutX="157.0" layoutY="396.0" mnemonicParsing="false" onAction="#deleteCourse" prefHeight="36.0" prefWidth="103.0" styleClass="delete-btn" text="Delete" />
+                                    <Button fx:id="availableCourse_btnClear" layoutX="35.0" layoutY="396.0" mnemonicParsing="false" onAction="#clearCourseForm" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="331.0" layoutY="11.0" prefHeight="538.0" prefWidth="510.0">
@@ -367,10 +372,10 @@
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="availableCourse_table" layoutX="5.0" layoutY="6.0" prefHeight="528.0" prefWidth="498.0">
+                                    <TableView fx:id="availableCourse_table" layoutX="5.0" layoutY="6.0" onMouseClicked="#showCourseDataInForm" prefHeight="528.0" prefWidth="498.0">
                                       <columns>
-                                        <TableColumn fx:id="availableGrade_colCourse" prefWidth="92.0" text="COURSE" />
-                                        <TableColumn fx:id="availableCourse_colCouse" prefWidth="241.0" text="DESCRIPTION" />
+                                        <TableColumn fx:id="availableCourse_colCourse" prefWidth="92.0" text="COURSE" />
+                                        <TableColumn fx:id="availableCourse_colDescription" prefWidth="241.0" text="DESCRIPTION" />
                                           <TableColumn fx:id="availableCourse_colDegree" prefWidth="164.0" text="DEGREE" />
                                       </columns>
                                     </TableView>
