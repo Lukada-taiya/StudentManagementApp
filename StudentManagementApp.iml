@@ -18,7 +18,8 @@
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:linux:16" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:16" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:linux:16" level="project" />
-    <orderEntry type="library" name="Maven: org.webjars.npm:fortawesome__fontawesome-free:6.1.2" level="project" />
+    <orderEntry type="library" name="Maven: de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2" level="project" />
+    <orderEntry type="library" name="Maven: de.jensd:fontawesomefx-commons:9.1.2" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.30" level="project" />
     <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.19.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.7.1" level="project" />

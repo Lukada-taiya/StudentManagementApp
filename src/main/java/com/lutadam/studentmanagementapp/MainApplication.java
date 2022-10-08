@@ -2,16 +2,37 @@ package com.lutadam.studentmanagementapp;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
 public class MainApplication extends Application {
+
+    private double x;
+    private double y;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainview.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Parent root = FXMLLoader.load(MainApplication.class.getResource("mainview.fxml"));
+        Scene scene = new Scene(root, 600, 400);
+        root.setOnMousePressed((MouseEvent event) -> {
+            x = event.getSceneX();
+            y = event.getSceneY();
+        });
+
+        root.setOnMouseDragged((MouseEvent event) -> {
+            stage.setX(event.getScreenX() - x);
+            stage.setY(event.getScreenY() - y);
+            stage.setOpacity(.5);
+        });
+
+        root.setOnMouseReleased((MouseEvent event) -> {
+            stage.setOpacity(1);
+        });
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setTitle("Student Management App");
         stage.setScene(scene);
         stage.show();
