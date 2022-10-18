@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
@@ -16,10 +15,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class DashboardController {
     private Button addStudents_btnUpdate;
 
     @FXML
-    private ComboBox<?> addStudents_cbCourse;
+    private ComboBox<String> addStudents_cbCourse;
 
     @FXML
     private ComboBox<String> addStudents_cbGender;
@@ -243,6 +245,7 @@ public class DashboardController {
     private double x;
     private double y;
     private Image image;
+    private String query;
     private int[] yearList = {100,200,300,400,500,600};
     private String[] genderList = {"Male", "Female"};
     private String[] statusList = {"Enrolled", "Not Enrolled", "Inactive"};
@@ -253,7 +256,71 @@ public class DashboardController {
         populateGenderList();
         populateStatusList();
         populateYearList();
+        populateCourseList();
         showCourseData();
+    }
+
+    @FXML
+    private void addStudent() {
+
+        String year = addStudents_cbYear.getSelectionModel().getSelectedItem();
+        String course = addStudents_cbCourse.getSelectionModel().getSelectedItem();
+        String fName = addStudents_tfFName.getText().trim();
+        String lName = addStudents_tfLName.getText().trim();
+        String gender = addStudents_cbGender.getSelectionModel().getSelectedItem();
+        String status = addStudents_cbStatus.getSelectionModel().getSelectedItem();
+        String bdate = String.valueOf(addStudents_dtBirthDate.getValue());
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Add Student Error");
+        alert.setHeaderText(null);
+        if(addStudents_tfId.getText().trim().isEmpty() || year == null || year.isEmpty() ||  course == null || course.isEmpty() || fName.isEmpty() ||
+            lName.isEmpty() || gender == null || gender.isEmpty() || status == null || status.isEmpty() || bdate.isEmpty() || getImageData.path == null) {
+            alert.setContentText("Please fill all blank fields");
+            alert.show();
+        } else {
+            int id;
+            try {
+                id = Integer.parseInt(addStudents_tfId.getText().trim());
+            }catch (NumberFormatException e) {
+                alert.setContentText("Invalid ID. All characters must be number digits");
+                alert.show();
+                return;
+            }
+            query = "SELECT * FROM student WHERE id_number= ?";
+            result = DBUtils.fetchDb(query,id);
+            try {
+                if(result.next()) {
+                    alert.setContentText("A student with this id already exists");
+                }else {
+                    query = "INSERT INTO student(id_number,year,course,firstname,lastname,gender, birthdate,status, image,date) VALUES(?,?,?,?,?,?,?,?,?,?)";
+                    String uri = getImageData.path;
+                    uri.replace("\\", "\\\\");
+                    java.util.Date date = new java.util.Date();
+                    Date dt = new Date(date.getTime());
+                    DBUtils.insertDb(query,id,year,course,fName,lName,gender,bdate,status,uri,String.valueOf(dt));
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Add Student Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Student have been added successfully");
+                }
+                alert.show();
+            }catch (SQLException e) { e.printStackTrace(); }
+            DBUtils.closeAllResources();
+        }
+    }
+
+    @FXML
+    private void insertImage() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Insert Student Picture");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*.png", "*.jpg", "*.jpeg"));
+        File file = fc.showOpenDialog(main_page.getScene().getWindow());
+        if(file != null) {
+            addStudents_image.setImage(new Image(file.toURI().toString(), 164,200,false,true));
+            getImageData.path = file.getAbsolutePath();
+        }
+
+
     }
 
     @FXML
@@ -267,7 +334,7 @@ public class DashboardController {
             Optional<ButtonType> response = alert.showAndWait();
 
             if(response.isPresent() && response.get().equals(ButtonType.OK)) {
-                String query = "DELETE FROM course WHERE name = ?";
+                query = "DELETE FROM course WHERE name = ?";
                 DBUtils.insertDb(query, course.getName());
                 courseList.remove(course);
                 clearCourseForm();
@@ -310,7 +377,7 @@ public class DashboardController {
             alert.setContentText("Please fill all blank fields");
             alert.show();
         }else {
-            String query = "SELECT * FROM course WHERE name = ?";
+            query = "SELECT * FROM course WHERE name = ?";
             result = DBUtils.fetchDb(query, name);
             try {
                 if(!result.isBeforeFirst()) {
@@ -349,7 +416,7 @@ public class DashboardController {
             alert.setContentText("Please fill all blank fields");
             alert.show();
         }else {
-            String query = "SELECT * FROM course WHERE name = ?";
+            query = "SELECT * FROM course WHERE name = ?";
             result = DBUtils.fetchDb(query, name);
             try {
                 if(result.isBeforeFirst()) {
@@ -377,7 +444,7 @@ public class DashboardController {
 
     private ObservableList<Course> getCourseData() {
         courseList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM course";
+        query = "SELECT * FROM course";
         result = DBUtils.fetchDb(query);
         try {
             if(result.isBeforeFirst()) {
@@ -396,7 +463,6 @@ public class DashboardController {
     @FXML
     private void showCourseData() {
         courseList = getCourseData();
-        if(courseList.isEmpty()) return;
         availableCourse_colCourse.setCellValueFactory(new PropertyValueFactory<>("name"));
         availableCourse_colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         availableCourse_colDegree.setCellValueFactory(new PropertyValueFactory<>("degree"));
@@ -415,7 +481,7 @@ public class DashboardController {
 
     private ObservableList<Student> getStudentData() {
         ObservableList<Student> studentList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM student";
+        query = "SELECT * FROM student";
         result = DBUtils.fetchDb(query);
         try {
             if(result.isBeforeFirst()) {
@@ -435,7 +501,6 @@ public class DashboardController {
     @FXML
     private void showStudentData() {
         ObservableList<Student> studentD = getStudentData();
-        if(studentD.isEmpty()) return;
         addStudents_colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         addStudents_colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         addStudents_colCourse.setCellValueFactory(new PropertyValueFactory<>("course"));
@@ -445,6 +510,7 @@ public class DashboardController {
         addStudents_colBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
         addStudents_colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         addStudents_table.setItems(studentD);
+        populateCourseList();
     }
 
     //Shows student data in form to be edited on add students page
@@ -460,6 +526,20 @@ public class DashboardController {
             image = new Image(uri, 164,200, false, true);
             addStudents_image.setImage(image);
         }
+    }
+
+    private void populateCourseList() {
+        query = "SELECT * FROM course";
+        List<String> list = new ArrayList<>();
+        result = DBUtils.fetchDb(query);
+        try {
+            while (result.next()) {
+                list.add(result.getString("name"));
+            }
+        }catch (SQLException e) { e.printStackTrace(); }
+        DBUtils.closeAllResources();
+        ObservableList<String> obList = FXCollections.observableArrayList(list);
+        addStudents_cbCourse.setItems(obList);
     }
 
     private void populateYearList() {

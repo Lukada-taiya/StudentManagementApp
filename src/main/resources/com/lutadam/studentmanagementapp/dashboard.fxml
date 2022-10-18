@@ -15,7 +15,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -214,7 +213,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0" visible="false">
+                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0">
                            <children>
                               <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="539.0" prefWidth="831.0">
                                  <styleClass>
@@ -288,19 +287,15 @@
                                           <String fx:value="card-container" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addStudents_image" fitHeight="200.0" fitWidth="164.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <image>
-                                                <Image url="file:/home/lukada/Documents/workspace/StudentManagementApp/src/main/resources/com/lutadam/studentmanagementapp/images/images.jpeg" />
-                                             </image>
-                                          </ImageView>
-                                          <Button fx:id="addStudents_btnInsert" layoutY="148.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="164.0" styleClass="insert-btn" text="Insert">
+                                          <ImageView fx:id="addStudents_image" fitHeight="200.0" fitWidth="164.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <Button fx:id="addStudents_btnInsert" layoutY="148.0" mnemonicParsing="false" onAction="#insertImage" prefHeight="52.0" prefWidth="164.0" styleClass="insert-btn" text="Insert">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Button>
                                        </children>
                                     </AnchorPane>
-                                    <Button fx:id="addStudents_btnAdd" layoutX="737.0" layoutY="492.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="62.0" styleClass="add-btn" text="Add" />
+                                    <Button fx:id="addStudents_btnAdd" layoutX="737.0" layoutY="492.0" mnemonicParsing="false" onAction="#addStudent" prefHeight="36.0" prefWidth="62.0" styleClass="add-btn" text="Add" />
                                     <Button fx:id="addStudents_btnUpdate" layoutX="645.0" layoutY="493.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="82.0" styleClass="update-btn" text="Update" />
                                     <Button fx:id="addStudents_btnDelete" layoutX="572.0" layoutY="493.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="62.0" styleClass="delete-btn" text="Delete" />
                                     <Button fx:id="addStudents_btnClear" layoutX="480.0" layoutY="494.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="82.0" styleClass="clear-btn" text="Clear" />
@@ -334,7 +329,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="availableCourse_page" layoutX="248.0" layoutY="79.0" prefHeight="558.0" prefWidth="854.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="availableCourse_page" layoutX="248.0" layoutY="79.0" prefHeight="558.0" prefWidth="854.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="10.0" prefHeight="538.0" prefWidth="294.0">
                                  <styleClass>
