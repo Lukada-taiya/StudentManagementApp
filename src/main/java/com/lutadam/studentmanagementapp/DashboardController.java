@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -242,6 +243,7 @@ public class DashboardController {
 
     private ResultSet result;
     private ObservableList<Course> courseList;
+    private ObservableList<Student> studentList;
     private double x;
     private double y;
     private Image image;
@@ -260,9 +262,86 @@ public class DashboardController {
         showCourseData();
     }
 
+    private void updateStudentTable(Student student) {
+        for(Student obj:studentList) {
+            if(obj.getId() == student.getId()) {
+                obj.setYear(student.getYear());
+                obj.setCourse(student.getCourse());
+                obj.setFirstName(student.getFirstName());
+                obj.setLastName(student.getLastName());
+                obj.setGender(student.getGender());
+                obj.setBirthDate(student.getBirthDate());
+                obj.setStatus(student.getStatus());
+                obj.setImage(student.getImage());
+            }
+        }
+    }
+
+    @FXML
+    private void updateStudent() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Update Student Error");
+        alert.setHeaderText(null);
+
+        String year = addStudents_cbYear.getSelectionModel().getSelectedItem();
+        String course = addStudents_cbCourse.getSelectionModel().getSelectedItem();
+        String fName = addStudents_tfFName.getText().trim();
+        String lName = addStudents_tfLName.getText().trim();
+        String gender = addStudents_cbGender.getSelectionModel().getSelectedItem();
+        String status = addStudents_cbStatus.getSelectionModel().getSelectedItem();
+        String bdate = String.valueOf(addStudents_dtBirthDate.getValue());
+
+        if(addStudents_tfId.getText().trim().isEmpty() || year == null || year.isEmpty() ||  course == null || course.isEmpty() || fName.isEmpty() ||
+                lName.isEmpty() || gender == null || gender.isEmpty() || status == null || status.isEmpty() || bdate.isEmpty() || getImageData.path == null) {
+            alert.setContentText("Please fill all blank fields");
+            alert.show();
+        }else {
+            int id;
+            try {
+                id = Integer.parseInt(addStudents_tfId.getText().trim());
+            }catch (NumberFormatException e ) {
+                alert.setContentText("Invalid Id. All characters must be number digits");
+                alert.show();
+                return;
+            }
+
+            query = "SELECT * FROM student WHERE id_number = ?";
+            result = DBUtils.fetchDb(query, id);
+            try {
+                if(!result.next()) {
+                    alert.setContentText("This id does not exist.");
+                    alert.show();
+                }else {
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText(null);
+                    alert.setTitle("Confirm Student Update");
+                    alert.setContentText("Are you sure you want to update student #"+ id);
+                    Optional<ButtonType> response = alert.showAndWait();
+                    if(response.isPresent() && response.get().equals(ButtonType.OK)) {
+                        query = "UPDATE student SET year = ?, course = ?, firstname = ?, lastname = ?, gender = ?, status = ?, image = ?," +
+                                "birthdate = ? WHERE id_number = ?";
+                        String uri = getImageData.path;
+                        uri.replace("\\", "\\\\");
+                        DBUtils.insertDb(query, id, 9, year,course,fName,lName,gender,status, uri, bdate);
+                        updateStudentTable(new Student(id, Integer.parseInt(year), course,fName,lName,gender,addStudents_dtBirthDate.getValue(), status, uri));
+                        clearStudentForm();
+                        showStudentData();
+                        alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText(null);
+                        alert.setTitle("Student Update Success");
+                        alert.setContentText("Student has been updated successfully");
+                        alert.show();
+                    }
+                }
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+            DBUtils.closeAllResources();
+        }
+    }
+
     @FXML
     private void addStudent() {
-
         String year = addStudents_cbYear.getSelectionModel().getSelectedItem();
         String course = addStudents_cbCourse.getSelectionModel().getSelectedItem();
         String fName = addStudents_tfFName.getText().trim();
@@ -295,14 +374,15 @@ public class DashboardController {
                     query = "INSERT INTO student(id_number,year,course,firstname,lastname,gender, birthdate,status, image,date) VALUES(?,?,?,?,?,?,?,?,?,?)";
                     String uri = getImageData.path;
                     uri.replace("\\", "\\\\");
-                    java.util.Date date = new java.util.Date();
-                    Date dt = new Date(date.getTime());
-                    DBUtils.insertDb(query,id,year,course,fName,lName,gender,bdate,status,uri,String.valueOf(dt));
+                    DBUtils.insertDb(query,id,1,year,course,fName,lName,gender,bdate,status,uri,String.valueOf(LocalDate.now()));
+                    studentList.add(new Student(id,Integer.parseInt(year),course,fName,lName,gender,addStudents_dtBirthDate.getValue(),status,uri));
+                    clearStudentForm();
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Add Student Success");
                     alert.setHeaderText(null);
                     alert.setContentText("Student have been added successfully");
                 }
+                showStudentData();
                 alert.show();
             }catch (SQLException e) { e.printStackTrace(); }
             DBUtils.closeAllResources();
@@ -321,6 +401,43 @@ public class DashboardController {
         }
 
 
+    }
+
+    @FXML
+    private void deleteStudent() {
+        Student std = addStudents_table.getSelectionModel().getSelectedItem();
+        Alert alert;
+        if(std != null) {
+            try {
+                query = "SELECT * FROM student WHERE id_number = ?";
+                result = DBUtils.fetchDb(query, std.getId());
+                if (!result.next()) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Delete Student Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Sorry, student does not exist");
+                    alert.show();
+                }else {
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText(null);
+                    alert.setTitle("Confirm Delete");
+                    alert.setContentText("Are you sure you want to delete this student #" + std.getId());
+                    Optional<ButtonType> response = alert.showAndWait();
+                    if(response.isPresent() && response.get().equals(ButtonType.OK)) {
+                        query = "DELETE FROM student WHERE id_number = ?";
+                        DBUtils.insertDb(query,std.getId());
+                        clearStudentForm();
+                        showStudentData();
+                        alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText(null);
+                        alert.setContentText("Student has been successfully deleted");
+                        alert.setTitle("Delete Student Success");
+                        alert.show();
+                    }
+                }
+            }catch (SQLException e) { e.printStackTrace(); }
+            DBUtils.closeAllResources();
+        }
     }
 
     @FXML
@@ -355,6 +472,21 @@ public class DashboardController {
             }
         }
     }
+
+    @FXML
+    private void clearStudentForm() {
+        addStudents_tfId.setText("");
+        addStudents_cbCourse.getSelectionModel().clearSelection();
+        addStudents_cbYear.getSelectionModel().clearSelection();
+        addStudents_tfFName.setText("");
+        addStudents_tfLName.setText("");
+        addStudents_cbGender.getSelectionModel().clearSelection();
+        addStudents_dtBirthDate.setValue(null);
+        addStudents_cbStatus.getSelectionModel().clearSelection();
+        addStudents_image.setImage(null);
+        getImageData.path = null;
+    }
+
 
     @FXML
     private void clearCourseForm() {
@@ -442,7 +574,7 @@ public class DashboardController {
 
     }
 
-    private ObservableList<Course> getCourseData() {
+    private void getCourseData() {
         courseList = FXCollections.observableArrayList();
         query = "SELECT * FROM course";
         result = DBUtils.fetchDb(query);
@@ -457,12 +589,11 @@ public class DashboardController {
                 }
             }
         }catch (SQLException e) {e.printStackTrace();}
-        return  courseList;
     }
 
     @FXML
     private void showCourseData() {
-        courseList = getCourseData();
+        getCourseData();
         availableCourse_colCourse.setCellValueFactory(new PropertyValueFactory<>("name"));
         availableCourse_colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         availableCourse_colDegree.setCellValueFactory(new PropertyValueFactory<>("degree"));
@@ -479,28 +610,29 @@ public class DashboardController {
         }
     }
 
-    private ObservableList<Student> getStudentData() {
-        ObservableList<Student> studentList = FXCollections.observableArrayList();
+    private void getStudentData() {
+        studentList = FXCollections.observableArrayList();
         query = "SELECT * FROM student";
         result = DBUtils.fetchDb(query);
         try {
             if(result.isBeforeFirst()) {
                 while (result.next()) {
+                    Date bdate = result.getDate("birthdate");
+                    LocalDate bd = bdate.toLocalDate();
                     Student student = new Student(result.getInt("id_number"), result.getInt("year"),
                             result.getString("course"), result.getString("firstName"),
-                            result.getString("lastName"), result.getString("gender"), result.getDate("birthdate"),
+                            result.getString("lastName"), result.getString("gender"),bd ,
                             result.getString("status"), result.getString("image"));
                     studentList.add(student);
                 }
             }
         }catch (SQLException e) { e.printStackTrace(); }
         DBUtils.closeAllResources();
-        return studentList;
     }
 
     @FXML
     private void showStudentData() {
-        ObservableList<Student> studentD = getStudentData();
+        getStudentData();
         addStudents_colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         addStudents_colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         addStudents_colCourse.setCellValueFactory(new PropertyValueFactory<>("course"));
@@ -509,7 +641,7 @@ public class DashboardController {
         addStudents_colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
         addStudents_colBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
         addStudents_colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        addStudents_table.setItems(studentD);
+        addStudents_table.setItems(studentList);
         populateCourseList();
     }
 
@@ -521,8 +653,7 @@ public class DashboardController {
             addStudents_tfId.setText(String.valueOf(stu.getId()));
             addStudents_tfFName.setText(stu.getFirstName());
             addStudents_tfLName.setText(stu.getLastName());
-            String uri = "file:/home/lukada/Documents/workspace/StudentManagementApp/src/main/resources/com/lutadam/studentmanagementapp/images/"
-                    + stu.getImage();
+            String uri = "file:" + stu.getImage();
             image = new Image(uri, 164,200, false, true);
             addStudents_image.setImage(image);
         }
