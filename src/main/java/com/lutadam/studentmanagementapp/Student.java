@@ -12,6 +12,9 @@ public class Student {
     private LocalDate birthDate;
     private String status;
     private String image;
+    private Double firstSem;
+    private Double secondSem;
+    private Double finals;
 
     public Student(int id, int year, String course, String firstName, String lastName, String gender, LocalDate birthDate, String status, String image) {
         this.id = id;
@@ -23,6 +26,15 @@ public class Student {
         this.birthDate = birthDate;
         this.status = status;
         this.image = image;
+    }
+
+    public Student(int id, int year, String course, Double firstSem, Double secondSem, Double finals) {
+        this.id = id;
+        this.year = year;
+        this.course = course;
+        this.firstSem = firstSem;
+        this.secondSem = secondSem;
+        this.finals = finals;
     }
 
     public int getId() {
@@ -61,6 +73,18 @@ public class Student {
         return image;
     }
 
+    public Double getFirstSem() {
+        return firstSem;
+    }
+
+    public Double getSecondSem() {
+        return secondSem;
+    }
+
+    public Double getFinals() {
+        return finals;
+    }
+
     public void setYear(int year) {
         this.year = year;
     }
@@ -91,5 +115,17 @@ public class Student {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setFirstSem(Double firstSem) {
+        this.firstSem = firstSem;
+    }
+
+    public void setSecondSem(Double secondSem) {
+        this.secondSem = secondSem;
+    }
+
+    public void setFinals(Double finals) {
+        this.finals = finals;
     }
 }
