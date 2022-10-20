@@ -1,6 +1,5 @@
 package com.lutadam.studentmanagementapp;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class Student {

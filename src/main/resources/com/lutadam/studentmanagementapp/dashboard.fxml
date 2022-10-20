@@ -116,7 +116,7 @@
                <center>
                   <AnchorPane fx:id="main_page" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_page" prefHeight="558.0" prefWidth="855.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                        <AnchorPane fx:id="home_page" prefHeight="558.0" prefWidth="855.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                            <styleClass>
                               <String fx:value="shadow" />
                               <String fx:value="card-container" />
@@ -213,7 +213,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0" visible="false">
+                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0">
                            <children>
                               <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="539.0" prefWidth="831.0">
                                  <styleClass>
@@ -307,7 +307,7 @@
                                     <String fx:value="card-container" />
                                  </styleClass>
                                  <children>
-                                    <TextField fx:id="addStudents_tfSearch" layoutX="35.0" layoutY="12.0" prefHeight="37.0" prefWidth="237.0" promptText="Search" styleClass="search">
+                                    <TextField fx:id="addStudents_tfSearch" layoutX="35.0" layoutY="12.0" onKeyTyped="#addStudentSearch" prefHeight="37.0" prefWidth="237.0" promptText="Search" styleClass="search">
                                        <font>
                                           <Font size="15.0" />
                                        </font>

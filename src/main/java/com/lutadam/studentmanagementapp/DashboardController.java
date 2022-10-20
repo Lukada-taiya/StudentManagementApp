@@ -1,7 +1,11 @@
 package com.lutadam.studentmanagementapp;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,6 +32,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class DashboardController {
 
@@ -260,6 +265,56 @@ public class DashboardController {
         populateYearList();
         populateCourseList();
         showCourseData();
+    }
+
+    @FXML
+    private void addStudentSearch() {
+//        System.out.println("b====");
+        FilteredList<Student> fList = new FilteredList<>(studentList, e -> true);
+
+        addStudents_tfSearch.textProperty().addListener((observableValue, oldVal, newVal) -> {
+            fList.setPredicate(student -> {
+                if (newVal == null || newVal.isEmpty()) {
+                    return true;
+                }
+
+                String searchKey = newVal.toLowerCase();
+//                System.out.println("new " +newVal);
+//                System.out.println("stu " + student.getFirstName());
+                if (String.valueOf(student.getId()).contains(searchKey)) {
+//                    System.out.println("Yes");
+                    return true;
+                } else if (String.valueOf(student.getYear()).contains(searchKey)) {
+                    return true;
+                } else if (student.getCourse().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (student.getFirstName().toLowerCase().contains(searchKey)) {
+//                    System.out.println("Enters name");
+                    return true;
+                } else if (student.getLastName().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (student.getGender().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (String.valueOf(student.getBirthDate()).contains(searchKey)) {
+                    return true;
+                } else if (student.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+//                    System.out.println("false");
+                    return false;
+                }
+//                System.out.println("NOpe false");
+//                return false;
+            });
+        });
+
+        SortedList<Student> sList = new SortedList<>(fList);
+//        System.out.println(fList);
+        sList.comparatorProperty().bind(addStudents_table.comparatorProperty());
+//        System.out.println(sList);
+//        System.out.println(fList.getPredicate());
+        addStudents_table.setItems(sList);
+//        System.out.println("e========");
     }
 
     private void updateStudentTable(Student student) {
@@ -643,6 +698,7 @@ public class DashboardController {
         addStudents_colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         addStudents_table.setItems(studentList);
         populateCourseList();
+        addStudentSearch();
     }
 
     //Shows student data in form to be edited on add students page
