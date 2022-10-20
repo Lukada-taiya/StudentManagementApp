@@ -207,16 +207,19 @@ public class DashboardController {
     private TableColumn<Student, String> studentGrade_col_course;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_firstSem;
+    private TableColumn<Student, String> studentGrade_col_firstSem;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_id;
+    private TableColumn<Student, String> studentGrade_col_id;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_secondSem;
+    private TableColumn<Student, String> studentGrade_col_secondSem;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_year;
+    private TableColumn<Student, String> studentGrade_col_year;
+
+    @FXML
+    private TableColumn<Student,String> studentGrade_col_final;
 
     @FXML
     private AnchorPane studentGrade_page;
@@ -225,7 +228,7 @@ public class DashboardController {
     private TextField studentGrade_search;
 
     @FXML
-    private TableView<?> studentGrade_table;
+    private TableView<Student> studentGrade_table;
 
     @FXML
     private Button studentGrade_tfClear;
@@ -249,6 +252,7 @@ public class DashboardController {
     private ResultSet result;
     private ObservableList<Course> courseList;
     private ObservableList<Student> studentList;
+    private ObservableList<Student> studentGradeList;
     private double x;
     private double y;
     private Image image;
@@ -265,6 +269,7 @@ public class DashboardController {
         populateYearList();
         populateCourseList();
         showCourseData();
+        showStudentGradeData();
     }
 
     @FXML
@@ -431,6 +436,8 @@ public class DashboardController {
                     String uri = getImageData.path;
                     uri.replace("\\", "\\\\");
                     DBUtils.insertDb(query,String.valueOf(id),year,course,fName,lName,gender,bdate,status,uri,String.valueOf(LocalDate.now()));
+                    query = "INSERT INTO student_grades(id_number,year,course) VALUES(?,?,?)";
+                    DBUtils.insertDb(query, String.valueOf(id), year,course);
                     studentList.add(new Student(id,Integer.parseInt(year),course,fName,lName,gender,addStudents_dtBirthDate.getValue(),status,uri));
                     clearStudentForm();
                     alert = new Alert(Alert.AlertType.INFORMATION);
@@ -666,6 +673,27 @@ public class DashboardController {
         }
     }
 
+    private void getStudentGradeData() {
+        studentGradeList = FXCollections.observableArrayList();
+        query = "SELECT * FROM student_grades";
+        result = DBUtils.fetchDb(query);
+        try {
+            if(result.isBeforeFirst()) {
+                while (result.next()) {
+                    int id = result.getInt("id_number");
+                    int year = result.getInt("year");
+                    String course = result.getString("course");
+                    double firstSem = result.getDouble("first_sem");
+                    double secondSem = result.getDouble("second_sem");
+                    double finalSem = result.getDouble("final");
+                    Student student = new Student(id,year,course,firstSem,secondSem,finalSem);
+                    studentGradeList.add(student);
+                }
+            }
+        }catch (SQLException e) { e.printStackTrace();}
+        DBUtils.closeAllResources();
+    }
+
     private void getStudentData() {
         studentList = FXCollections.observableArrayList();
         query = "SELECT * FROM student";
@@ -687,6 +715,18 @@ public class DashboardController {
     }
 
     @FXML
+    private void showStudentGradeData() {
+        getStudentGradeData();
+        studentGrade_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        studentGrade_col_year.setCellValueFactory(new PropertyValueFactory<>("year"));
+        studentGrade_col_course.setCellValueFactory(new PropertyValueFactory<>("course"));
+        studentGrade_col_firstSem.setCellValueFactory(new PropertyValueFactory<>("firstSem"));
+        studentGrade_col_secondSem.setCellValueFactory(new PropertyValueFactory<>("secondSem"));
+        studentGrade_col_final.setCellValueFactory(new PropertyValueFactory<>("finals"));
+        studentGrade_table.setItems(studentGradeList);
+    }
+
+    @FXML
     private void showStudentData() {
         getStudentData();
         addStudents_colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -700,6 +740,17 @@ public class DashboardController {
         addStudents_table.setItems(studentList);
         populateCourseList();
         addStudentSearch();
+    }
+
+    @FXML
+    private void showStudentGradeDataInForm() {
+        Student student = studentGrade_table.getSelectionModel().getSelectedItem();
+        if(student == null) return;
+        studentGrade_tfId.setText(String.valueOf(student.getId()));
+        studentGrade_tfYear.setText(String.valueOf(student.getYear()));
+        studentGrade_tfCourse.setText(String.valueOf(student.getCourse()));
+        studentGrade_tfFirstSem.setText(String.valueOf(student.getFirstSem()));
+        studentGrade_tfSecondSem.setText(String.valueOf(student.getSecondSem()));
     }
 
     //Shows student data in form to be edited on add students page

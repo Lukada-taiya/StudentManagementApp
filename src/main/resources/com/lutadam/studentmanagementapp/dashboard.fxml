@@ -94,7 +94,7 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="BOOK" size="20" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnAddStudentsGrades" layoutX="19.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Students' Grades" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnAddStudentsGrades" layoutX="19.0" layoutY="360.0" mnemonicParsing="false" onAction="#showStudentGradeData" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Students' Grades" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -213,7 +213,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0">
+                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0" visible="false">
                            <children>
                               <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="539.0" prefWidth="831.0">
                                  <styleClass>
@@ -378,7 +378,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="studentGrade_page" prefHeight="558.0" prefWidth="854.0" visible="false">
+                        <AnchorPane fx:id="studentGrade_page" prefHeight="558.0" prefWidth="854.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="10.0" prefHeight="538.0" prefWidth="294.0">
                                  <styleClass>
@@ -416,8 +416,8 @@
                                        </font>
                                     </Label>
                                     <TextField fx:id="studentGrade_tfSecondSem" layoutX="114.0" layoutY="247.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" AnchorPane.leftAnchor="114.0" />
-                                    <Label fx:id="studentGrade_tfYear" layoutX="114.0" layoutY="101.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Label" AnchorPane.leftAnchor="114.0" />
-                                    <Label fx:id="studentGrade_tfCourse" layoutX="114.0" layoutY="149.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Label" AnchorPane.leftAnchor="114.0" />
+                                    <Label fx:id="studentGrade_tfYear" layoutX="114.0" layoutY="101.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Null" AnchorPane.leftAnchor="114.0" />
+                                    <Label fx:id="studentGrade_tfCourse" layoutX="114.0" layoutY="149.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Null" AnchorPane.leftAnchor="114.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="331.0" layoutY="11.0" prefHeight="538.0" prefWidth="510.0">
@@ -426,14 +426,14 @@
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="studentGrade_table" layoutX="5.0" layoutY="70.0" prefHeight="464.0" prefWidth="498.0">
+                                    <TableView fx:id="studentGrade_table" layoutX="5.0" layoutY="70.0" onMouseClicked="#showStudentGradeDataInForm" prefHeight="464.0" prefWidth="498.0">
                                        <columns>
                                           <TableColumn fx:id="studentGrade_col_id" prefWidth="49.0" text="ID" />
-                                          <TableColumn fx:id="studentGrade_col_year" prefWidth="56.0" text="YEAR" />
-                                          <TableColumn fx:id="studentGrade_col_course" prefWidth="73.0" text="COURSE" />
-                                          <TableColumn fx:id="studentGrade_col_firstSem" prefWidth="121.0" text="FIRST SEM" />
-                                          <TableColumn fx:id="studentGrade_col_secondSem" minWidth="0.0" prefWidth="117.0" text="SECOND SEM" />
-                                          <TableColumn prefWidth="81.0" text="FINAL" />
+                                          <TableColumn fx:id="studentGrade_col_year" prefWidth="46.0" text="YEAR" />
+                                          <TableColumn fx:id="studentGrade_col_course" prefWidth="148.0" text="COURSE" />
+                                          <TableColumn fx:id="studentGrade_col_firstSem" prefWidth="83.0" text="FIRST SEM" />
+                                          <TableColumn fx:id="studentGrade_col_secondSem" minWidth="0.0" prefWidth="104.0" text="SECOND SEM" />
+                                          <TableColumn fx:id="studentGrade_col_final" prefWidth="67.0" text="FINAL" />
                                        </columns>
                                     </TableView>
                                     <TextField fx:id="studentGrade_search" layoutX="17.0" layoutY="15.0" prefHeight="37.0" prefWidth="237.0" promptText="Search" styleClass="search">
