@@ -33,7 +33,6 @@ public class MainApplication extends Application {
             stage.setOpacity(1);
         });
         stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setTitle("Student Management App");
         stage.setScene(scene);
         stage.show();
     }
