@@ -436,7 +436,7 @@
                                           <TableColumn fx:id="studentGrade_col_final" prefWidth="67.0" text="FINAL" />
                                        </columns>
                                     </TableView>
-                                    <TextField fx:id="studentGrade_search" layoutX="17.0" layoutY="15.0" prefHeight="37.0" prefWidth="237.0" promptText="Search" styleClass="search">
+                                    <TextField fx:id="studentGrade_search" layoutX="17.0" layoutY="15.0" onKeyTyped="#studentGradeSearch" prefHeight="37.0" prefWidth="237.0" promptText="Search" styleClass="search">
                                        <font>
                                           <Font size="15.0" />
                                        </font>

@@ -248,7 +248,6 @@ public class DashboardController {
     @FXML
     private Label studentGrade_tfYear;
 
-
     private ResultSet result;
     private ObservableList<Course> courseList;
     private ObservableList<Student> studentList;
@@ -320,6 +319,28 @@ public class DashboardController {
 //        System.out.println(fList.getPredicate());
         addStudents_table.setItems(sList);
 //        System.out.println("e========");
+    }
+
+    @FXML
+    private void studentGradeSearch() {
+        FilteredList<Student> filteredList = new FilteredList<>(studentGradeList, e->true);
+        studentGrade_search.textProperty().addListener((observable,oldVal, newVal) -> {
+            filteredList.setPredicate(stu -> {
+                if(newVal == null || newVal.isEmpty()) return true;
+
+                String searchKey = newVal.toLowerCase();
+                if(String.valueOf(stu.getId()).contains(searchKey)) return true;
+                else if(String.valueOf(stu.getYear()).contains(searchKey)) return true;
+                else if(stu.getCourse().toLowerCase().contains(searchKey)) return true;
+                else if(String.valueOf(stu.getFirstSem()).contains(searchKey)) return true;
+                else if(String.valueOf(stu.getSecondSem()).contains(searchKey)) return true;
+                return false;
+            });
+        });
+
+        SortedList<Student> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(studentGrade_table.comparatorProperty());
+        studentGrade_table.setItems(sortedList);
     }
 
     private void updateStudentTable(Student student) {
@@ -742,6 +763,7 @@ public class DashboardController {
         studentGrade_col_secondSem.setCellValueFactory(new PropertyValueFactory<>("secondSem"));
         studentGrade_col_final.setCellValueFactory(new PropertyValueFactory<>("finals"));
         studentGrade_table.setItems(studentGradeList);
+        studentGradeSearch();
     }
 
     @FXML
