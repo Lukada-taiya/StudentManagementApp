@@ -568,6 +568,16 @@ public class DashboardController {
     }
 
     @FXML
+    private void clearStudentGradeForm() {
+        studentGrade_tfId.setText("");
+        studentGrade_tfFirstSem.setText("");
+        studentGrade_tfYear.setText("");
+        studentGrade_tfCourse.setText("");
+        studentGrade_tfFirstSem.setText("");
+        studentGrade_tfSecondSem.setText("");
+    }
+
+    @FXML
     private void updateCourse() {
         String name = availableCourse_tfCourse.getText();
         String description = availableCourse_taDescription.getText();

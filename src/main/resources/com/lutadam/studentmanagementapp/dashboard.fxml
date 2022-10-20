@@ -403,7 +403,7 @@
                                        </font>
                                     </Label>
                                     <Button fx:id="studentGrade_btnUpdate" layoutX="157.0" layoutY="317.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="update-btn" text="Update" AnchorPane.topAnchor="317.0" />
-                                    <Button fx:id="studentGrade_tfClear" layoutX="35.0" layoutY="364.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" AnchorPane.topAnchor="317.0" />
+                                    <Button fx:id="studentGrade_tfClear" layoutX="35.0" layoutY="364.0" mnemonicParsing="false" onAction="#clearStudentGradeForm" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" AnchorPane.topAnchor="317.0" />
                                     <Label layoutX="27.0" layoutY="209.0" text="First Sem:">
                                        <font>
                                           <Font size="15.0" />
