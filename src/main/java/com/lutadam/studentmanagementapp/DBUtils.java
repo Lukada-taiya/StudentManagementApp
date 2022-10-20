@@ -75,33 +75,6 @@ public class DBUtils {
         return fetchedData;
     }
 
-    public static ResultSet fetchDb(String query, int id) {
-        connection = connectDb();
-
-        try{
-            fetch = connection.prepareStatement(query);
-            fetch.setInt(1, id);
-            fetchedData = fetch.executeQuery();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return fetchedData;
-    }
-
-    public static void insertDb(String query, int id) {
-        Connection connection = connectDb();
-        try{
-            fetch = connection.prepareStatement(query);
-            fetch.setInt(1,id);
-            fetch.executeUpdate();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            closeResource(fetch);
-            closeResource(connection);
-        }
-    }
-
     public static void insertDb(String query, String... opts) {
         Connection connection = connectDb();
         try{
@@ -120,23 +93,5 @@ public class DBUtils {
         }
     }
 
-    public static void insertDb(String query, int id, int num, String... opts) {
-        Connection connection = connectDb();
-        try{
-            fetch = connection.prepareStatement(query);
-            fetch.setInt(num  ,id);
-            int count = (1 == num) ? 2:1;
-            for(String opt:opts) {
-                fetch.setString(count, opt);
-                count = (count+1 == num) ? count +2: count+1;
-            }
-            fetch.executeUpdate();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            closeResource(fetch);
-            closeResource(connection);
-        }
-    }
 
 }

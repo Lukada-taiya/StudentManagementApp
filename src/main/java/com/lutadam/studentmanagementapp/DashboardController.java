@@ -361,7 +361,7 @@ public class DashboardController {
             }
 
             query = "SELECT * FROM student WHERE id_number = ?";
-            result = DBUtils.fetchDb(query, id);
+            result = DBUtils.fetchDb(query, String.valueOf(id));
             try {
                 if(!result.next()) {
                     alert.setContentText("This id does not exist.");
@@ -377,7 +377,8 @@ public class DashboardController {
                                 "birthdate = ? WHERE id_number = ?";
                         String uri = getImageData.path;
                         uri.replace("\\", "\\\\");
-                        DBUtils.insertDb(query, id, 9, year,course,fName,lName,gender,status, uri, bdate);
+                        DBUtils.insertDb(query, year,course,fName,lName,gender,status, uri, bdate, String.valueOf(id));
+
                         updateStudentTable(new Student(id, Integer.parseInt(year), course,fName,lName,gender,addStudents_dtBirthDate.getValue(), status, uri));
                         clearStudentForm();
                         showStudentData();
@@ -421,7 +422,7 @@ public class DashboardController {
                 return;
             }
             query = "SELECT * FROM student WHERE id_number= ?";
-            result = DBUtils.fetchDb(query,id);
+            result = DBUtils.fetchDb(query,String.valueOf(id));
             try {
                 if(result.next()) {
                     alert.setContentText("A student with this id already exists");
@@ -429,7 +430,7 @@ public class DashboardController {
                     query = "INSERT INTO student(id_number,year,course,firstname,lastname,gender, birthdate,status, image,date) VALUES(?,?,?,?,?,?,?,?,?,?)";
                     String uri = getImageData.path;
                     uri.replace("\\", "\\\\");
-                    DBUtils.insertDb(query,id,1,year,course,fName,lName,gender,bdate,status,uri,String.valueOf(LocalDate.now()));
+                    DBUtils.insertDb(query,String.valueOf(id),year,course,fName,lName,gender,bdate,status,uri,String.valueOf(LocalDate.now()));
                     studentList.add(new Student(id,Integer.parseInt(year),course,fName,lName,gender,addStudents_dtBirthDate.getValue(),status,uri));
                     clearStudentForm();
                     alert = new Alert(Alert.AlertType.INFORMATION);
@@ -465,7 +466,7 @@ public class DashboardController {
         if(std != null) {
             try {
                 query = "SELECT * FROM student WHERE id_number = ?";
-                result = DBUtils.fetchDb(query, std.getId());
+                result = DBUtils.fetchDb(query, String.valueOf(std.getId()));
                 if (!result.next()) {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Delete Student Error");
@@ -480,7 +481,7 @@ public class DashboardController {
                     Optional<ButtonType> response = alert.showAndWait();
                     if(response.isPresent() && response.get().equals(ButtonType.OK)) {
                         query = "DELETE FROM student WHERE id_number = ?";
-                        DBUtils.insertDb(query,std.getId());
+                        DBUtils.insertDb(query,String.valueOf(std.getId()));
                         clearStudentForm();
                         showStudentData();
                         alert = new Alert(Alert.AlertType.INFORMATION);
