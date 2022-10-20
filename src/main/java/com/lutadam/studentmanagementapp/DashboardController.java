@@ -444,7 +444,7 @@ public class DashboardController {
                     DBUtils.insertDb(query,String.valueOf(id),year,course,fName,lName,gender,bdate,status,uri,String.valueOf(LocalDate.now()));
                     query = "INSERT INTO student_grades(id_number,year,course) VALUES(?,?,?)";
                     DBUtils.insertDb(query, String.valueOf(id), year,course);
-                    studentList.add(new Student(id,Integer.parseInt(year),course,fName,lName,gender,addStudents_dtBirthDate.getValue(),status,uri)); 
+                    studentList.add(new Student(id,Integer.parseInt(year),course,fName,lName,gender,addStudents_dtBirthDate.getValue(),status,uri));
                     clearStudentForm();
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Add Student Success");
@@ -769,6 +769,7 @@ public class DashboardController {
             addStudents_tfId.setText(String.valueOf(stu.getId()));
             addStudents_tfFName.setText(stu.getFirstName());
             addStudents_tfLName.setText(stu.getLastName());
+            getImageData.path = stu.getImage();
             String uri = "file:" + stu.getImage();
             image = new Image(uri, 164,200, false, true);
             addStudents_image.setImage(image);
