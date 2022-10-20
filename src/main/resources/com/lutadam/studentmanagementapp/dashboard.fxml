@@ -416,8 +416,8 @@
                                        </font>
                                     </Label>
                                     <TextField fx:id="studentGrade_tfSecondSem" layoutX="114.0" layoutY="247.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" AnchorPane.leftAnchor="114.0" />
-                                    <Label fx:id="studentGrade_tfYear" layoutX="114.0" layoutY="101.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Null" AnchorPane.leftAnchor="114.0" />
-                                    <Label fx:id="studentGrade_tfCourse" layoutX="114.0" layoutY="149.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Null" AnchorPane.leftAnchor="114.0" />
+                                    <Label fx:id="studentGrade_tfYear" layoutX="114.0" layoutY="101.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" AnchorPane.leftAnchor="114.0" />
+                                    <Label fx:id="studentGrade_tfCourse" layoutX="114.0" layoutY="149.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" AnchorPane.leftAnchor="114.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="331.0" layoutY="11.0" prefHeight="538.0" prefWidth="510.0">

@@ -368,7 +368,7 @@ public class DashboardController {
             query = "SELECT * FROM student WHERE id_number = ?";
             result = DBUtils.fetchDb(query, String.valueOf(id));
             try {
-                if(!result.next()) {
+                if(!result.isBeforeFirst()) {
                     alert.setContentText("This id does not exist.");
                     alert.show();
                 }else {
@@ -385,6 +385,12 @@ public class DashboardController {
                         DBUtils.insertDb(query, year,course,fName,lName,gender,status, uri, bdate, String.valueOf(id));
 
                         updateStudentTable(new Student(id, Integer.parseInt(year), course,fName,lName,gender,addStudents_dtBirthDate.getValue(), status, uri));
+                        query = "SELECT * FROM student_grades WHERE id_number = ?";
+                        result = DBUtils.fetchDb(query,String.valueOf(id));
+                        if(result.isBeforeFirst()) {
+                            query = "UPDATE student_grades SET year = ?, course = ? WHERE id_number = ?";
+                            DBUtils.insertDb(query,year,course,String.valueOf(id));
+                        }
                         clearStudentForm();
                         showStudentData();
                         alert = new Alert(Alert.AlertType.INFORMATION);
@@ -438,7 +444,7 @@ public class DashboardController {
                     DBUtils.insertDb(query,String.valueOf(id),year,course,fName,lName,gender,bdate,status,uri,String.valueOf(LocalDate.now()));
                     query = "INSERT INTO student_grades(id_number,year,course) VALUES(?,?,?)";
                     DBUtils.insertDb(query, String.valueOf(id), year,course);
-                    studentList.add(new Student(id,Integer.parseInt(year),course,fName,lName,gender,addStudents_dtBirthDate.getValue(),status,uri));
+                    studentList.add(new Student(id,Integer.parseInt(year),course,fName,lName,gender,addStudents_dtBirthDate.getValue(),status,uri)); 
                     clearStudentForm();
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Add Student Success");
@@ -489,6 +495,8 @@ public class DashboardController {
                     if(response.isPresent() && response.get().equals(ButtonType.OK)) {
                         query = "DELETE FROM student WHERE id_number = ?";
                         DBUtils.insertDb(query,String.valueOf(std.getId()));
+                        query = "DELETE FROM student_grades WHERE id_number = ?";
+                        DBUtils.insertDb(query, String.valueOf(std.getId()));
                         clearStudentForm();
                         showStudentData();
                         alert = new Alert(Alert.AlertType.INFORMATION);
