@@ -1,7 +1,5 @@
 package com.lutadam.studentmanagementapp;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -579,6 +577,47 @@ public class DashboardController {
         getImageData.path = null;
     }
 
+    @FXML
+    private void updateStudentGrade() {
+        String id = studentGrade_tfId.getText().trim();
+        String fSem = studentGrade_tfFirstSem.getText().trim();
+        String sSem = studentGrade_tfSecondSem.getText().trim();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setTitle("Update Student Error");
+        if(id == null || id.isEmpty() || fSem == null || fSem.isEmpty() || sSem == null || sSem.isEmpty()) {
+            alert.setContentText("Please fill in all blank fields");
+            alert.show();
+            return;
+        }
+        query = "SELECT * FROM student_grades WHERE id_number = ?";
+        result = DBUtils.fetchDb(query,id);
+        try {
+            if(result.isBeforeFirst()) {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText(null);
+                alert.setTitle("Confirm Student Update");
+                alert.setContentText("Are you sure you want to update student #"+ id);
+                Optional<ButtonType> response = alert.showAndWait();
+                if(response.isPresent() && response.get().equals(ButtonType.OK)) {
+                    query = "UPDATE student_grades SET first_sem = ?,second_sem = ?, final = ? WHERE id_number = ?";
+                    double finals = (Double.parseDouble(fSem) + Double.parseDouble(sSem))/2;
+                    DBUtils.insertDb(query,fSem,sSem,String.valueOf(finals), id);
+                    showStudentGradeData();
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setTitle("Student Update Success");
+                    alert.setContentText("Student has been successfully updated");
+                    alert.show();
+                }
+            }else {
+                alert.setContentText("This student does not exist");
+                alert.show();
+            }
+        }catch (SQLException e) { e.printStackTrace();}
+        DBUtils.closeAllResources();
+
+    }
 
     @FXML
     private void clearCourseForm() {
