@@ -1,7 +1,5 @@
 package com.lutadam.studentmanagementapp;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -248,7 +246,6 @@ public class DashboardController {
     @FXML
     private Label studentGrade_tfYear;
 
-
     private ResultSet result;
     private ObservableList<Course> courseList;
     private ObservableList<Student> studentList;
@@ -322,6 +319,28 @@ public class DashboardController {
 //        System.out.println("e========");
     }
 
+    @FXML
+    private void studentGradeSearch() {
+        FilteredList<Student> filteredList = new FilteredList<>(studentGradeList, e->true);
+        studentGrade_search.textProperty().addListener((observable,oldVal, newVal) -> {
+            filteredList.setPredicate(stu -> {
+                if(newVal == null || newVal.isEmpty()) return true;
+
+                String searchKey = newVal.toLowerCase();
+                if(String.valueOf(stu.getId()).contains(searchKey)) return true;
+                else if(String.valueOf(stu.getYear()).contains(searchKey)) return true;
+                else if(stu.getCourse().toLowerCase().contains(searchKey)) return true;
+                else if(String.valueOf(stu.getFirstSem()).contains(searchKey)) return true;
+                else if(String.valueOf(stu.getSecondSem()).contains(searchKey)) return true;
+                return false;
+            });
+        });
+
+        SortedList<Student> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(studentGrade_table.comparatorProperty());
+        studentGrade_table.setItems(sortedList);
+    }
+
     private void updateStudentTable(Student student) {
         for(Student obj:studentList) {
             if(obj.getId() == student.getId()) {
@@ -368,7 +387,7 @@ public class DashboardController {
             query = "SELECT * FROM student WHERE id_number = ?";
             result = DBUtils.fetchDb(query, String.valueOf(id));
             try {
-                if(!result.next()) {
+                if(!result.isBeforeFirst()) {
                     alert.setContentText("This id does not exist.");
                     alert.show();
                 }else {
@@ -385,6 +404,12 @@ public class DashboardController {
                         DBUtils.insertDb(query, year,course,fName,lName,gender,status, uri, bdate, String.valueOf(id));
 
                         updateStudentTable(new Student(id, Integer.parseInt(year), course,fName,lName,gender,addStudents_dtBirthDate.getValue(), status, uri));
+                        query = "SELECT * FROM student_grades WHERE id_number = ?";
+                        result = DBUtils.fetchDb(query,String.valueOf(id));
+                        if(result.isBeforeFirst()) {
+                            query = "UPDATE student_grades SET year = ?, course = ? WHERE id_number = ?";
+                            DBUtils.insertDb(query,year,course,String.valueOf(id));
+                        }
                         clearStudentForm();
                         showStudentData();
                         alert = new Alert(Alert.AlertType.INFORMATION);
@@ -489,6 +514,8 @@ public class DashboardController {
                     if(response.isPresent() && response.get().equals(ButtonType.OK)) {
                         query = "DELETE FROM student WHERE id_number = ?";
                         DBUtils.insertDb(query,String.valueOf(std.getId()));
+                        query = "DELETE FROM student_grades WHERE id_number = ?";
+                        DBUtils.insertDb(query, String.valueOf(std.getId()));
                         clearStudentForm();
                         showStudentData();
                         alert = new Alert(Alert.AlertType.INFORMATION);
@@ -550,6 +577,47 @@ public class DashboardController {
         getImageData.path = null;
     }
 
+    @FXML
+    private void updateStudentGrade() {
+        String id = studentGrade_tfId.getText().trim();
+        String fSem = studentGrade_tfFirstSem.getText().trim();
+        String sSem = studentGrade_tfSecondSem.getText().trim();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setTitle("Update Student Error");
+        if(id == null || id.isEmpty() || fSem == null || fSem.isEmpty() || sSem == null || sSem.isEmpty()) {
+            alert.setContentText("Please fill in all blank fields");
+            alert.show();
+            return;
+        }
+        query = "SELECT * FROM student_grades WHERE id_number = ?";
+        result = DBUtils.fetchDb(query,id);
+        try {
+            if(result.isBeforeFirst()) {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText(null);
+                alert.setTitle("Confirm Student Update");
+                alert.setContentText("Are you sure you want to update student #"+ id);
+                Optional<ButtonType> response = alert.showAndWait();
+                if(response.isPresent() && response.get().equals(ButtonType.OK)) {
+                    query = "UPDATE student_grades SET first_sem = ?,second_sem = ?, final = ? WHERE id_number = ?";
+                    double finals = (Double.parseDouble(fSem) + Double.parseDouble(sSem))/2;
+                    DBUtils.insertDb(query,fSem,sSem,String.valueOf(finals), id);
+                    showStudentGradeData();
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setTitle("Student Update Success");
+                    alert.setContentText("Student has been successfully updated");
+                    alert.show();
+                }
+            }else {
+                alert.setContentText("This student does not exist");
+                alert.show();
+            }
+        }catch (SQLException e) { e.printStackTrace();}
+        DBUtils.closeAllResources();
+
+    }
 
     @FXML
     private void clearCourseForm() {
@@ -557,6 +625,16 @@ public class DashboardController {
         availableCourse_taDescription.clear();
         availableCourse_tfDegree.clear();
         availableCourse_table.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void clearStudentGradeForm() {
+        studentGrade_tfId.setText("");
+        studentGrade_tfFirstSem.setText("");
+        studentGrade_tfYear.setText("");
+        studentGrade_tfCourse.setText("");
+        studentGrade_tfFirstSem.setText("");
+        studentGrade_tfSecondSem.setText("");
     }
 
     @FXML
@@ -724,6 +802,7 @@ public class DashboardController {
         studentGrade_col_secondSem.setCellValueFactory(new PropertyValueFactory<>("secondSem"));
         studentGrade_col_final.setCellValueFactory(new PropertyValueFactory<>("finals"));
         studentGrade_table.setItems(studentGradeList);
+        studentGradeSearch();
     }
 
     @FXML
@@ -761,6 +840,7 @@ public class DashboardController {
             addStudents_tfId.setText(String.valueOf(stu.getId()));
             addStudents_tfFName.setText(stu.getFirstName());
             addStudents_tfLName.setText(stu.getLastName());
+            getImageData.path = stu.getImage();
             String uri = "file:" + stu.getImage();
             image = new Image(uri, 164,200, false, true);
             addStudents_image.setImage(image);

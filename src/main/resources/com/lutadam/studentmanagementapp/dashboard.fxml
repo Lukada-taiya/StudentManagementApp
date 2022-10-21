@@ -213,7 +213,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0" visible="false">
+                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0">
                            <children>
                               <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="539.0" prefWidth="831.0">
                                  <styleClass>
@@ -378,7 +378,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="studentGrade_page" prefHeight="558.0" prefWidth="854.0">
+                        <AnchorPane fx:id="studentGrade_page" prefHeight="558.0" prefWidth="854.0" visible="false">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="10.0" prefHeight="538.0" prefWidth="294.0">
                                  <styleClass>
@@ -402,8 +402,8 @@
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="studentGrade_btnUpdate" layoutX="157.0" layoutY="317.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="103.0" styleClass="update-btn" text="Update" AnchorPane.topAnchor="317.0" />
-                                    <Button fx:id="studentGrade_tfClear" layoutX="35.0" layoutY="364.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" AnchorPane.topAnchor="317.0" />
+                                    <Button fx:id="studentGrade_btnUpdate" layoutX="157.0" layoutY="317.0" mnemonicParsing="false" onAction="#updateStudentGrade" prefHeight="36.0" prefWidth="103.0" styleClass="update-btn" text="Update" AnchorPane.topAnchor="317.0" />
+                                    <Button fx:id="studentGrade_tfClear" layoutX="35.0" layoutY="364.0" mnemonicParsing="false" onAction="#clearStudentGradeForm" prefHeight="36.0" prefWidth="102.0" styleClass="clear-btn" text="Clear" AnchorPane.topAnchor="317.0" />
                                     <Label layoutX="27.0" layoutY="209.0" text="First Sem:">
                                        <font>
                                           <Font size="15.0" />
@@ -416,8 +416,8 @@
                                        </font>
                                     </Label>
                                     <TextField fx:id="studentGrade_tfSecondSem" layoutX="114.0" layoutY="247.0" prefHeight="29.0" prefWidth="171.0" styleClass="textfield" stylesheets="@dashboardpage.css" AnchorPane.leftAnchor="114.0" />
-                                    <Label fx:id="studentGrade_tfYear" layoutX="114.0" layoutY="101.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Null" AnchorPane.leftAnchor="114.0" />
-                                    <Label fx:id="studentGrade_tfCourse" layoutX="114.0" layoutY="149.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" text="Null" AnchorPane.leftAnchor="114.0" />
+                                    <Label fx:id="studentGrade_tfYear" layoutX="114.0" layoutY="101.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" AnchorPane.leftAnchor="114.0" />
+                                    <Label fx:id="studentGrade_tfCourse" layoutX="114.0" layoutY="149.0" prefHeight="28.0" prefWidth="173.0" styleClass="label-info" AnchorPane.leftAnchor="114.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="331.0" layoutY="11.0" prefHeight="538.0" prefWidth="510.0">
@@ -436,7 +436,7 @@
                                           <TableColumn fx:id="studentGrade_col_final" prefWidth="67.0" text="FINAL" />
                                        </columns>
                                     </TableView>
-                                    <TextField fx:id="studentGrade_search" layoutX="17.0" layoutY="15.0" prefHeight="37.0" prefWidth="237.0" promptText="Search" styleClass="search">
+                                    <TextField fx:id="studentGrade_search" layoutX="17.0" layoutY="15.0" onKeyTyped="#studentGradeSearch" prefHeight="37.0" prefWidth="237.0" promptText="Search" styleClass="search">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
