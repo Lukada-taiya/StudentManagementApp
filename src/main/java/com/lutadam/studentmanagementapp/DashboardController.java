@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -260,6 +261,7 @@ public class DashboardController {
 
     public void initialize() {
         btnHome.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+        displayUserName();
         showStudentData();
         populateGenderList();
         populateStatusList();
@@ -267,6 +269,104 @@ public class DashboardController {
         populateCourseList();
         showCourseData();
         showStudentGradeData();
+        showHomeData();
+    }
+
+    private void displayUserName() {
+        lbUsername.setText(getImageData.username);
+    }
+
+    private void homeTotalEnrolledGraph() {
+        home_totalEnrolledChart.getData().clear();
+        query = "SELECT date,count(id) FROM `student` WHERE status = ? GROUP BY date LIMIT 5";
+        XYChart.Series chart = new XYChart.Series();
+        result = DBUtils.fetchDb(query, "Enrolled");
+        try {
+            if(result.isBeforeFirst()) {
+                while (result.next()) {
+                    chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
+                }
+            }
+        }catch (SQLException e) { e.printStackTrace();}
+        home_totalEnrolledChart.getData().add(chart);
+        DBUtils.closeAllResources();
+    }
+
+    private void homeFemaleEnrolledGraph() {
+        home_enrolledFemaleChart.getData().clear();
+        query = "SELECT date,count(id) FROM `student` WHERE status = ? AND gender = ? GROUP BY date LIMIT 5";
+        XYChart.Series chart = new XYChart.Series();
+        result = DBUtils.fetchDb(query, "Enrolled", "Female");
+        try {
+            if(result.isBeforeFirst()) {
+                while (result.next()) {
+                    chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
+                }
+            }
+        }catch (SQLException e) { e.printStackTrace();}
+        home_enrolledFemaleChart.getData().add(chart);
+        DBUtils.closeAllResources();
+    }
+
+    private void homeMaleEnrolledGraph() {
+        home_enrolledMaleChart.getData().clear();
+        query = "SELECT date,count(id) FROM `student` WHERE status = ? AND gender = ? GROUP BY date LIMIT 5";
+        XYChart.Series chart = new XYChart.Series();
+        result = DBUtils.fetchDb(query, "Enrolled", "Male");
+        try {
+            if(result.isBeforeFirst()) {
+                while (result.next()) {
+                    chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
+                }
+            }
+        }catch (SQLException e) { e.printStackTrace();}
+        home_enrolledMaleChart.getData().add(chart);
+        DBUtils.closeAllResources();
+    }
+
+    @FXML
+    private void showHomeData() {
+        totalEnrolled();
+        totalFemaleEnrolled();
+        totalMaleEnrolled();
+        homeFemaleEnrolledGraph();
+        homeMaleEnrolledGraph();
+        homeTotalEnrolledGraph();
+    }
+    private void totalEnrolled() {
+        query = "SELECT count(id) FROM student WHERE status = ?";
+        result = DBUtils.fetchDb(query, "Enrolled");
+        try {
+            if(result.next()) {
+                int totalEnrolled = result.getInt("count(id)");
+                home_totalEnrolled.setText(String.valueOf(totalEnrolled));
+            }
+        }catch (SQLException e) { e.printStackTrace(); }
+        DBUtils.closeAllResources();
+    }
+
+    private void totalFemaleEnrolled() {
+        query = "SELECT count(id) FROM student WHERE status = ? AND gender = ?";
+        result = DBUtils.fetchDb(query, "Enrolled", "Female");
+        try {
+            if(result.next()) {
+                int femaleEnrolled = result.getInt("count(id)");
+                home_enrolledFemale.setText(String.valueOf(femaleEnrolled));
+            }
+        }catch (SQLException e) { e.printStackTrace(); }
+        DBUtils.closeAllResources();
+    }
+
+    private void totalMaleEnrolled() {
+        query = "SELECT count(id) FROM student WHERE status = ? AND gender = ?";
+        result = DBUtils.fetchDb(query, "Enrolled", "Male");
+        try {
+            if(result.next()) {
+                int maleEnrolled = result.getInt("count(id)");
+                home_enrolledMale.setText(String.valueOf(maleEnrolled));
+            }
+        }catch (SQLException e) { e.printStackTrace(); }
+        DBUtils.closeAllResources();
     }
 
     @FXML

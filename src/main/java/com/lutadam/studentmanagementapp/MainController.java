@@ -66,6 +66,7 @@ public class MainController {
                     alert.setHeaderText(null);
                     alert.setContentText("Login Successful");
                     alert.showAndWait();
+                    getImageData.username = name;
                     //Show Dashboard
                     Parent root = null;
                     Stage stage = new Stage();
