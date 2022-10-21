@@ -31,27 +31,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class DashboardController {
 
     @FXML
     private AnchorPane addStudent_page;
-
-    @FXML
-    private Button addStudents_btnAdd;
-
-    @FXML
-    private Button addStudents_btnClear;
-
-    @FXML
-    private Button addStudents_btnDelete;
-
-    @FXML
-    private Button addStudents_btnInsert;
-
-    @FXML
-    private Button addStudents_btnUpdate;
 
     @FXML
     private ComboBox<String> addStudents_cbCourse;
@@ -114,19 +98,6 @@ public class DashboardController {
     private AnchorPane availableCourse_page;
 
     @FXML
-    private Button availableCourse_btnAdd;
-
-    @FXML
-    private Button availableCourse_btnClear;
-
-    @FXML
-    private Button availableCourse_btnDelete;
-
-    @FXML
-    private Button availableCourse_btnUpdate;
-
-
-    @FXML
     private TableColumn<Course,String> availableCourse_colDescription;
 
     @FXML
@@ -161,15 +132,6 @@ public class DashboardController {
     private Button btnHome;
 
     @FXML
-    private Button btnLogOut;
-
-    @FXML
-    private Button close;
-
-    @FXML
-    private AnchorPane dashbooard;
-
-    @FXML
     private Label home_enrolledFemale;
 
     @FXML
@@ -195,12 +157,6 @@ public class DashboardController {
 
     @FXML
     private AnchorPane main_page;
-
-    @FXML
-    private Button minimize;
-
-    @FXML
-    private Button studentGrade_btnUpdate;
 
     @FXML
     private TableColumn<Student, String> studentGrade_col_course;
@@ -230,9 +186,6 @@ public class DashboardController {
     private TableView<Student> studentGrade_table;
 
     @FXML
-    private Button studentGrade_tfClear;
-
-    @FXML
     private Label studentGrade_tfCourse;
 
     @FXML
@@ -253,11 +206,10 @@ public class DashboardController {
     private ObservableList<Student> studentGradeList;
     private double x;
     private double y;
-    private Image image;
     private String query;
-    private int[] yearList = {100,200,300,400,500,600};
-    private String[] genderList = {"Male", "Female"};
-    private String[] statusList = {"Enrolled", "Not Enrolled", "Inactive"};
+    private final int[] yearList = {100,200,300,400,500,600};
+    private final String[] genderList = {"Male", "Female"};
+    private final String[] statusList = {"Enrolled", "Not Enrolled", "Inactive"};
 
     public void initialize() {
         btnHome.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d);");
@@ -374,41 +326,35 @@ public class DashboardController {
 //        System.out.println("b====");
         FilteredList<Student> fList = new FilteredList<>(studentList, e -> true);
 
-        addStudents_tfSearch.textProperty().addListener((observableValue, oldVal, newVal) -> {
-            fList.setPredicate(student -> {
-                if (newVal == null || newVal.isEmpty()) {
-                    return true;
-                }
+        addStudents_tfSearch.textProperty().addListener((observableValue, oldVal, newVal) -> fList.setPredicate(student -> {
+            if (newVal == null || newVal.isEmpty()) {
+                return true;
+            }
 
-                String searchKey = newVal.toLowerCase();
+            String searchKey = newVal.toLowerCase();
 //                System.out.println("new " +newVal);
 //                System.out.println("stu " + student.getFirstName());
-                if (String.valueOf(student.getId()).contains(searchKey)) {
+            if (String.valueOf(student.getId()).contains(searchKey)) {
 //                    System.out.println("Yes");
-                    return true;
-                } else if (String.valueOf(student.getYear()).contains(searchKey)) {
-                    return true;
-                } else if (student.getCourse().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (student.getFirstName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (String.valueOf(student.getYear()).contains(searchKey)) {
+                return true;
+            } else if (student.getCourse().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (student.getFirstName().toLowerCase().contains(searchKey)) {
 //                    System.out.println("Enters name");
-                    return true;
-                } else if (student.getLastName().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (student.getGender().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (String.valueOf(student.getBirthDate()).contains(searchKey)) {
-                    return true;
-                } else if (student.getStatus().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else {
-//                    System.out.println("false");
-                    return false;
-                }
+                return true;
+            } else if (student.getLastName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (student.getGender().toLowerCase().contains(searchKey)) {
+                return true;
+            } else //                    System.out.println("false");
+                if (String.valueOf(student.getBirthDate()).contains(searchKey)) {
+                return true;
+            } else return student.getStatus().toLowerCase().contains(searchKey);
 //                System.out.println("NOpe false");
 //                return false;
-            });
-        });
+        }));
 
         SortedList<Student> sList = new SortedList<>(fList);
 //        System.out.println(fList);
@@ -422,19 +368,16 @@ public class DashboardController {
     @FXML
     private void studentGradeSearch() {
         FilteredList<Student> filteredList = new FilteredList<>(studentGradeList, e->true);
-        studentGrade_search.textProperty().addListener((observable,oldVal, newVal) -> {
-            filteredList.setPredicate(stu -> {
-                if(newVal == null || newVal.isEmpty()) return true;
+        studentGrade_search.textProperty().addListener((observable,oldVal, newVal) -> filteredList.setPredicate(stu -> {
+            if(newVal == null || newVal.isEmpty()) return true;
 
-                String searchKey = newVal.toLowerCase();
-                if(String.valueOf(stu.getId()).contains(searchKey)) return true;
-                else if(String.valueOf(stu.getYear()).contains(searchKey)) return true;
-                else if(stu.getCourse().toLowerCase().contains(searchKey)) return true;
-                else if(String.valueOf(stu.getFirstSem()).contains(searchKey)) return true;
-                else if(String.valueOf(stu.getSecondSem()).contains(searchKey)) return true;
-                return false;
-            });
-        });
+            String searchKey = newVal.toLowerCase();
+            if(String.valueOf(stu.getId()).contains(searchKey)) return true;
+            else if(String.valueOf(stu.getYear()).contains(searchKey)) return true;
+            else if(stu.getCourse().toLowerCase().contains(searchKey)) return true;
+            else if(String.valueOf(stu.getFirstSem()).contains(searchKey)) return true;
+            else return String.valueOf(stu.getSecondSem()).contains(searchKey);
+        }));
 
         SortedList<Student> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(studentGrade_table.comparatorProperty());
@@ -500,7 +443,7 @@ public class DashboardController {
                         query = "UPDATE student SET year = ?, course = ?, firstname = ?, lastname = ?, gender = ?, status = ?, image = ?," +
                                 "birthdate = ? WHERE id_number = ?";
                         String uri = getImageData.path;
-                        uri.replace("\\", "\\\\");
+                        uri = uri.replace("\\", "\\\\");
                         DBUtils.insertDb(query, year,course,fName,lName,gender,status, uri, bdate, String.valueOf(id));
 
                         updateStudentTable(new Student(id, Integer.parseInt(year), course,fName,lName,gender,addStudents_dtBirthDate.getValue(), status, uri));
@@ -559,7 +502,7 @@ public class DashboardController {
                 }else {
                     query = "INSERT INTO student(id_number,year,course,firstname,lastname,gender, birthdate,status, image,date) VALUES(?,?,?,?,?,?,?,?,?,?)";
                     String uri = getImageData.path;
-                    uri.replace("\\", "\\\\");
+                    uri = uri.replace("\\", "\\\\");
                     DBUtils.insertDb(query,String.valueOf(id),year,course,fName,lName,gender,bdate,status,uri,String.valueOf(LocalDate.now()));
                     query = "INSERT INTO student_grades(id_number,year,course) VALUES(?,?,?)";
                     DBUtils.insertDb(query, String.valueOf(id), year,course);
@@ -685,7 +628,7 @@ public class DashboardController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         alert.setTitle("Update Student Error");
-        if(id == null || id.isEmpty() || fSem == null || fSem.isEmpty() || sSem == null || sSem.isEmpty()) {
+        if(id.isEmpty() || fSem.isEmpty() || sSem.isEmpty()) {
             alert.setContentText("Please fill in all blank fields");
             alert.show();
             return;
@@ -942,7 +885,7 @@ public class DashboardController {
             addStudents_tfLName.setText(stu.getLastName());
             getImageData.path = stu.getImage();
             String uri = "file:" + stu.getImage();
-            image = new Image(uri, 164,200, false, true);
+            Image image = new Image(uri, 164, 200, false, true);
             addStudents_image.setImage(image);
         }
     }
@@ -1012,9 +955,7 @@ public class DashboardController {
                     stage.setOpacity(.5);
                 });
 
-                root.setOnMouseReleased((MouseEvent event) -> {
-                    stage.setOpacity(1);
-                });
+                root.setOnMouseReleased((MouseEvent event) -> stage.setOpacity(1));
                 stage.initStyle(StageStyle.TRANSPARENT);
                 stage.setTitle("Student Management App");
                 stage.setScene(scene);
