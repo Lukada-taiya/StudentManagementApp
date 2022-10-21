@@ -69,7 +69,7 @@
                               <Font size="19.0" />
                            </font>
                         </Label>
-                        <Button fx:id="btnHome" layoutX="14.0" layoutY="245.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Home" textFill="WHITE" AnchorPane.leftAnchor="10.0">
+                        <Button fx:id="btnHome" layoutX="14.0" layoutY="245.0" mnemonicParsing="false" onAction="#showHomeData" onMouseClicked="#switchForm" prefHeight="35.0" prefWidth="213.0" styleClass="nav-button" text="Home" textFill="WHITE" AnchorPane.leftAnchor="10.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -116,7 +116,7 @@
                <center>
                   <AnchorPane fx:id="main_page" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_page" prefHeight="558.0" prefWidth="855.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                        <AnchorPane fx:id="home_page" prefHeight="558.0" prefWidth="855.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                            <styleClass>
                               <String fx:value="shadow" />
                               <String fx:value="card-container" />
@@ -213,7 +213,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0">
+                        <AnchorPane fx:id="addStudent_page" prefHeight="558.0" prefWidth="854.0" visible="false">
                            <children>
                               <AnchorPane layoutX="11.0" layoutY="13.0" prefHeight="539.0" prefWidth="831.0">
                                  <styleClass>
